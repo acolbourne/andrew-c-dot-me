@@ -2,6 +2,7 @@ import HolyLoader from 'holy-loader';
 import Providers from '@/components/Providers';
 import { websiteSettings } from '@/constants';
 import { seoMetadata } from '@/lib/metadata';
+import type { ExtraMetadata } from '@/types';
 import { geistMono, geistSans } from './typography';
 
 import '@/cssfiles/globals.css';
