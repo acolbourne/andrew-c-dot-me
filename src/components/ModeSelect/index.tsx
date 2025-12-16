@@ -55,7 +55,7 @@ export const ModeSelect: React.FC = () => {
 
   return (
     <button
-      className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 p-0 text-slate-600 transition-colors hover:text-slate-900 focus:outline-none dark:bg-slate-800 dark:text-slate-300 dark:hover:text-white"
+      className="mode-toggle"
       id="theme-toggle"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       type="button"
