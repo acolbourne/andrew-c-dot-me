@@ -17,6 +17,9 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
         version: 0.13.8(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.1.13)
+      gsap:
+        specifier: ^3.14.2
+        version: 3.14.2
       holy-loader:
         specifier: ^2.3.14
         version: 2.3.14(react@19.2.1)
@@ -3573,6 +3576,9 @@ packages:
   groq@4.21.1:
     resolution: {integrity: sha512-9+4WEkxsOYTJFzXp3JT3gD2cgQIqI+whs/rYfxoUI4WDE3lIugtFiKmX1WMQhTvddOCx8rnOyXbDwiBVGMWmwg==}
     engines: {node: '>=20.19 <22 || >=22.12'}
+
+  gsap@3.14.2:
+    resolution: {integrity: sha512-P8/mMxVLU7o4+55+1TCnQrPmgjPKnwkzkXOK1asnR9Jg2lna4tEY5qBJjMmAaOBDDZWtlRjBXjLa0w53G/uBLA==}
 
   gunzip-maybe@1.4.2:
     resolution: {integrity: sha512-4haO1M4mLO91PW57BMsDFf75UmwoRX0GkdD+Faw+Lr+r/OZrOCS0pIBwOL1xCKQqnQzbNFGgK2V2CpBUPeFNTw==}
@@ -9422,6 +9428,8 @@ snapshots:
   groq@3.88.1-typegen-experimental.0: {}
 
   groq@4.21.1: {}
+
+  gsap@3.14.2: {}
 
   gunzip-maybe@1.4.2:
     dependencies:

@@ -34,3 +34,7 @@ header {
 footer {
   @apply mt-24 flex flex-col items-center justify-between border-slate-200 border-t pt-8 text-slate-600 text-sm sm:flex-row dark:border-slate-800 dark:text-slate-400;
 }
+
+#hero-section {
+  @apply mb-16;
+}

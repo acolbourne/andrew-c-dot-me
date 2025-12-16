@@ -1,5 +1,10 @@
 import type { NextPage } from 'next';
+import HeroSection from '@/components/HeroSection/page';
 
-const Homepage: NextPage = () => <h1>Test</h1>;
+const Homepage: NextPage = () => (
+  <>
+    <HeroSection />
+  </>
+);
 
 export default Homepage;
