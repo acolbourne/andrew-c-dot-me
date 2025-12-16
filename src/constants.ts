@@ -3,6 +3,7 @@ import { env } from './env';
 
 export const websiteSettings: WebsiteConfig = {
   name: 'Andrew Colbourne',
+  nickname: 'Andy',
   title: 'Blog',
   description: 'My personal blog.',
   keywords: 'blog, personal, programming, tech',

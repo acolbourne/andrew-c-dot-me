@@ -15,7 +15,15 @@
     "title": "RSS Feed",
     "description": "The RSS feed for my posts."
   },
+  "heroSection": {
+    "title": "Hi, I'm",
+    "blurb": "On here, I write about trading, code, travel and other things I'm interested in. I also write about the projects I'm working on and share updates here."
+  },
+  "homepage": {
+    "latestArticles": "Latest Articles",
+    "viewArchive": "View Archive"
+  },
   "footer": {
-    "copyright": "© {fullYear} {websiteName}"
+    "copyright": "© {year} {websiteName}"
   }
 }
