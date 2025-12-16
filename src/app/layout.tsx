@@ -1,4 +1,3 @@
-import HolyLoader from 'holy-loader';
 import Providers from '@/components/Providers';
 import { websiteSettings } from '@/constants';
 import { seoMetadata } from '@/lib/metadata';
@@ -24,12 +23,6 @@ export default function RootLayout({
       <body
         className={`bg-white ${interFont} text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100`}
       >
-        <HolyLoader
-          color="linear-gradient(to right, #ff7e5f, #b224ef)"
-          easing="linear"
-          height="2px"
-          showSpinner={false}
-        />
         <Providers>
           <div id="main-container">
             <Header />

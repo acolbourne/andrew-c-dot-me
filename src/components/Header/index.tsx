@@ -3,7 +3,7 @@ import { navItems, websiteSettings } from '@/constants';
 import { ModeSelect } from '../ModeSelect';
 
 const Header: React.FC = () => (
-  <header className="mb-16 flex flex-row items-center justify-between">
+  <header>
     <Link
       className="font-bold text-xl tracking-tight transition-colors hover:text-accent-light dark:hover:text-accent-dark"
       href="/"
