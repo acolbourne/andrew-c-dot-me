@@ -1,5 +1,5 @@
 import Providers from '@/components/Providers';
-import { websiteSettings } from '@/constants';
+import { defaultLocale, websiteSettings } from '@/constants';
 import { seoMetadata } from '@/lib/metadata';
 import type { ExtraMetadata } from '@/types';
 import { interFont } from './typography';
@@ -23,7 +23,7 @@ export default function RootLayout({
       <body
         className={`bg-white ${interFont.className} text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100`}
       >
-        <Providers>
+        <Providers locale={defaultLocale}>
           <div id="main-container">
             <Header />
             <main>{children}</main>

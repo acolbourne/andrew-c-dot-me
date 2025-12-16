@@ -1,8 +1,14 @@
 'use client';
 
 import HolyLoader from 'holy-loader';
+import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider, useTheme } from 'next-themes';
 import type { JSX } from 'react';
+
+type ProviderProps = {
+  children: React.ReactNode;
+  locale: string;
+};
 
 const ThemedHolyLoader = (): JSX.Element | null => {
   const { theme, resolvedTheme } = useTheme();
@@ -28,11 +34,13 @@ const ThemedHolyLoader = (): JSX.Element | null => {
   );
 };
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children, locale }: ProviderProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <ThemedHolyLoader />
-      {children}
+      <NextIntlClientProvider locale={locale}>
+        <ThemedHolyLoader />
+        {children}
+      </NextIntlClientProvider>
     </ThemeProvider>
   );
 }

@@ -1,0 +1,21 @@
+{
+  "about": {
+    "title": "About Me",
+    "description": "About me and my work."
+  },
+  "archive": {
+    "title": "Archive",
+    "description": "An archive of my posts."
+  },
+  "contact": {
+    "title": "Contact Me",
+    "description": "Interested in working with me? Contact me using this form."
+  },
+  "rss": {
+    "title": "RSS Feed",
+    "description": "The RSS feed for my posts."
+  },
+  "footer": {
+    "copyright": "© {fullYear} {websiteName}"
+  }
+}

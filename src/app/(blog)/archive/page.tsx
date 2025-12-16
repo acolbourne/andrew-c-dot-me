@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { seoMetadata } from '@/lib/metadata';
 
 export async function generateMetadata() {
-  const t = await getTranslations('about');
+  const t = await getTranslations('archive');
 
   return seoMetadata({
     title: t('title'),
@@ -11,6 +11,6 @@ export async function generateMetadata() {
   });
 }
 
-const AboutMePage: NextPage = () => <h1>About Me</h1>;
+const RSSPage: NextPage = () => <h1>Blog Posts Archive</h1>;
 
-export default AboutMePage;
+export default RSSPage;
