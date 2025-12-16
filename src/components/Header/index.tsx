@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { navItems, websiteSettings } from '@/constants';
-import { ModeSelect } from '../ModeSelect';
+import Navigation from '../Navigation';
 
 const Header: React.FC = () => (
   <header>
@@ -12,21 +12,21 @@ const Header: React.FC = () => (
     </Link>
 
     <div className="flex items-center gap-6">
-      <nav className="hidden gap-6 font-semibold text-slate-600 text-sm sm:flex dark:text-slate-300">
-        {Object.values(navItems).map((item) => (
-          <Link
-            className="transition-colors hover:text-slate-900 dark:hover:text-white"
-            href={item.url}
-            key={item.url}
-            target={item.target ?? '_self'}
-          >
-            {item.name}
-          </Link>
-        ))}
-      </nav>
-
-      <ModeSelect />
+      <Navigation items={navItems} />
     </div>
+
+    {/* <div id="mobile-nav">
+      {Object.values(navItems).map((item) => (
+        <Link
+          className="block font-semibold text-lg text-slate-700 transition-colors hover:text-accent-light dark:text-slate-200 dark:hover:text-accent-dark"
+          href={item.url}
+          key={item.url}
+          target={item.target ?? '_self'}
+        >
+          {item.name}
+        </Link>
+      ))}
+    </div> */}
   </header>
 );
 

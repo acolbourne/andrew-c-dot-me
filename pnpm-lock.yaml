@@ -75,6 +75,9 @@ importers:
       babel-plugin-react-compiler:
         specifier: 1.0.0
         version: 1.0.0
+      daisyui:
+        specifier: ^5.5.14
+        version: 5.5.14
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -3090,6 +3093,9 @@ packages:
 
   cyclist@1.0.2:
     resolution: {integrity: sha512-0sVXIohTfLqVIW3kb/0n6IiWF3Ifj5nm2XaSrLq2DI6fKIGa2fYAZdk917rUneaeLVpYfFcyXE2ft0fe3remsA==}
+
+  daisyui@5.5.14:
+    resolution: {integrity: sha512-L47rvw7I7hK68TA97VB8Ee0woHew+/ohR6Lx6Ah/krfISOqcG4My7poNpX5Mo5/ytMxiR40fEaz6njzDi7cuSg==}
 
   data-uri-to-buffer@1.2.0:
     resolution: {integrity: sha512-vKQ9DTQPN1FLYiiEEOQ6IBGFqvjCa5rSK3cWMy/Nespm5d/x3dGFT9UBZnkLxCwua/IXBi2TYnwTEpsOvhC4UQ==}
@@ -8910,6 +8916,8 @@ snapshots:
   custom-media-element@1.4.5: {}
 
   cyclist@1.0.2: {}
+
+  daisyui@5.5.14: {}
 
   data-uri-to-buffer@1.2.0: {}
 

@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`bg-white ${interFont} text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100`}
+        className={`bg-white ${interFont.className} text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100`}
       >
         <Providers>
           <div id="main-container">
