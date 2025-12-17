@@ -13,17 +13,17 @@ export const metadata: ExtraMetadata = seoMetadata({
   description: websiteSettings.description
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const messages = (await import(`@/language/${defaultLocale}.json`)).default;
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`bg-white ${interFont.className} text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100`}
-      >
-        <Providers locale={defaultLocale}>
+      <body className={`${interFont.className} antialiased`}>
+        <Providers locale={defaultLocale} messages={messages}>
           <div id="main-container">
             <Header />
             <main>{children}</main>

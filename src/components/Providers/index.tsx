@@ -8,6 +8,7 @@ import type { JSX } from 'react';
 type ProviderProps = {
   children: React.ReactNode;
   locale: string;
+  messages: Record<string, unknown>;
 };
 
 const ThemedHolyLoader = (): JSX.Element | null => {
@@ -34,10 +35,15 @@ const ThemedHolyLoader = (): JSX.Element | null => {
   );
 };
 
-export default function Providers({ children, locale }: ProviderProps) {
+export default function Providers({ children, locale, messages }: ProviderProps) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <NextIntlClientProvider locale={locale}>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="light"
+      disableTransitionOnChange={false}
+      enableSystem={false}
+    >
+      <NextIntlClientProvider locale={locale} messages={messages}>
         <ThemedHolyLoader />
         {children}
       </NextIntlClientProvider>
