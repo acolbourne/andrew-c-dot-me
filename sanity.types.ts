@@ -52,7 +52,7 @@ export type Post = {
   };
   body?: Array<{
     children?: Array<{
-      marks?: Array<string>;
+      marks?: string[];
       text?: string;
       _type: 'span';
       _key: string;

@@ -1,10 +1,21 @@
-import type { NextPage } from 'next';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import BlogPostListing from '@/components/BlogPostListing';
 import HeroSection from '@/components/HeroSection/page';
+import Pagination from '@/components/Pagination';
+import { POSTS_QUERY } from '@/sanity/groq/queries';
+import { client } from '@/sanity/lib/client';
+import type { PostListing } from '@/types';
 
-const Homepage: NextPage = () => {
-  const t = useTranslations('homepage');
+const Homepage = async () => {
+  const t = await getTranslations('homepage');
+  const posts = await client.fetch(POSTS_QUERY, {
+    categorySlug: null,
+    tagSlug: null,
+    start: 0,
+    end: 5
+  });
+
   return (
     <>
       <HeroSection />
@@ -21,6 +32,25 @@ const Homepage: NextPage = () => {
             {t('viewArchive')}
           </Link>
         </div>
+
+        <div className="space-y-20">
+          {!!posts && posts.length > 0
+            ? posts.map((post: PostListing) => (
+                <BlogPostListing
+                  category={post.category}
+                  excerpt={post.excerpt}
+                  image={post.image}
+                  key={post._id}
+                  publishedAt={post.publishedAt}
+                  slug={post.slug}
+                  tags={post.tags}
+                  title={post.title}
+                />
+              ))
+            : null}
+        </div>
+
+        <Pagination />
       </section>
     </>
   );

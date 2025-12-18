@@ -1,3 +1,4 @@
 ✔ Set up next-intl and move text over to language keys. @done (12/17/2025, 4:32:01 PM)
 ☐ There is a basic, working mobile menu, but I'm not really sure about the design. Rethink it.
 ☐ Add anti-spam features to the contact form, including a CAPTCHA.
+☐ I've added a temporary favicon (from the old version of the site) to the metadata. Replace this with a new one.

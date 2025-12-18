@@ -19,7 +19,7 @@ const Navigation: React.FC<NavigationProps> = ({ items }) => {
         <nav id="main-nav">
           {Object.values(items).map((item) => (
             <Link
-              className="transition-colors hover:text-slate-900 dark:hover:text-white"
+              className="transition-colors hover:border-slate-900 hover:underline hover:decoration-2 hover:underline-offset-8"
               href={item.url}
               key={item.url}
               target={item.target ?? '_self'}

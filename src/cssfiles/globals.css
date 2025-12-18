@@ -67,3 +67,7 @@ header .mode-toggle {
 #hero-section {
   @apply mb-16;
 }
+
+.blog-post-listing {
+  @apply flex flex-col gap-5;
+}

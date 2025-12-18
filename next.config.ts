@@ -3,7 +3,15 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  serverExternalPackages: ['jsdom']
+  serverExternalPackages: ['jsdom'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io'
+      }
+    ]
+  }
 };
 
 const withNextIntl = createNextIntlPlugin();

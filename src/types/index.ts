@@ -1,3 +1,4 @@
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import type { Metadata } from 'next/types';
 import type { JSX } from 'react';
 
@@ -17,6 +18,25 @@ export type AlertMessage = {
   title?: string;
   message: string;
 };
+
+export type PostListing = {
+  _id: string;
+  title: string;
+  slug: string;
+  publishedAt: string;
+  image?: SanityImageSource;
+  category?: {
+    title: string;
+    slug: string;
+  };
+  tags?: Array<{
+    title: string;
+    slug: string;
+  }>;
+  excerpt?: string;
+};
+
+export type BlogPostListingProps = Omit<PostListing, '_id'>;
 
 export type ContactFormResult = {
   data: Response | null;

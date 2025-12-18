@@ -7,6 +7,7 @@ export const websiteSettings: WebsiteConfig = {
   title: 'Blog',
   description: 'My personal blog.',
   keywords: 'blog, personal, programming, tech',
+  favicon: '/images/logo.png',
   domain: env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://andrew-c.me',
   defaultLocale: 'en-GB'
 } as const;
@@ -18,7 +19,7 @@ export const navItems: NavItems = {
 };
 
 export const footerNavItems: NavItems = {
-  twitter: { url: 'https://www.twitter.com/andyctrader', name: 'Twitter', target: '_blank' },
+  twitter: { url: 'https://www.twitter.com/andyctrader', name: '𝕏', target: '_blank' },
   github: {
     url: 'https://github.com/acolbourne/andrew-c-dot-me',
     name: 'GitHub',
