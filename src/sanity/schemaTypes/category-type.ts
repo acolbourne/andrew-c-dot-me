@@ -18,6 +18,18 @@ export const categoryType = defineType({
           .warning('Titles should be between 3 and 100 characters in length.')
     }),
     defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'string',
+      description: 'A short description of the category.',
+      validation: (rule) =>
+        rule
+          .required()
+          .min(10)
+          .max(200)
+          .warning('Descriptions should be between 10 and 200 characters in length.')
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',

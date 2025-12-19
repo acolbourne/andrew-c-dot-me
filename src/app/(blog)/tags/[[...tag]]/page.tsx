@@ -1,69 +1,92 @@
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import BlogPostListing from '@/components/BlogPostListing';
 import Pagination from '@/components/Pagination';
 import { seoMetadata } from '@/lib/metadata';
-import { ARCHIVE_QUERY } from '@/sanity/groq/queries';
+import { TAG_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
-import type { PostListing } from '@/types';
-
-type ArchivePageProps = {
-  searchParams: Promise<{
-    page?: string;
-  }>;
-};
+import type { PostListing, TagPageProps } from '@/types';
 
 const POSTS_PER_PAGE = 10;
 
-export async function generateMetadata() {
-  const t = await getTranslations('archive');
+export async function generateMetadata({ params }: TagPageProps) {
+  const { tag } = await params;
+  const tagSlug = tag?.join('/') || '';
+  const t = await getTranslations('tag');
+
+  const tagData = await client.fetch(TAG_QUERY, {
+    tagSlug,
+    start: 0,
+    end: 0
+  });
+
+  if (!tagData) {
+    return seoMetadata({
+      title: t('notFound'),
+      description: t('description')
+    });
+  }
 
   return seoMetadata({
-    title: t('title'),
-    description: t('description')
+    title: t('title', { tagName: tagData.title }),
+    description: tagData.description || t('description')
   });
 }
 
-const ArchivePage = async ({ searchParams }: ArchivePageProps) => {
-  const { page } = await searchParams;
+const SingleTagPage = async ({ params, searchParams }: TagPageProps) => {
+  const { tag } = await params;
+  const tagSlug = tag?.join('/') || '';
+  const t = await getTranslations('tag');
+
+  if (!tagSlug) {
+    notFound();
+  }
+
+  const { page } = searchParams ? await searchParams : { page: undefined };
   const currentPage = page ? Number.parseInt(page, 10) : 1;
   const start = (currentPage - 1) * POSTS_PER_PAGE;
   const end = start + POSTS_PER_PAGE;
 
-  const archiveData = await client.fetch(ARCHIVE_QUERY, {
+  const tagData = await client.fetch(TAG_QUERY, {
+    tagSlug,
     start,
     end
   });
 
-  const t = await getTranslations('archive');
-  const totalPages = Math.ceil((archiveData?.postCount || 0) / POSTS_PER_PAGE);
+  if (!tagData) {
+    notFound();
+  }
+
+  const totalPages = Math.ceil((tagData.postCount || 0) / POSTS_PER_PAGE);
+  const basePath = `/tags/${tagSlug}`;
 
   return (
     <>
       <section className="mb-16 border-slate-200 border-b pb-10 dark:border-slate-800">
         <div className="mb-2">
           <span className="font-bold text-slate-500 text-xs uppercase tracking-wider dark:text-slate-500">
-            {t('browsingArchive')}
+            {t('browsingTag')}
           </span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
           <h1 className="font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-white">
-            {t('title')}
+            {tagData.title}
           </h1>
           <span className="mt-2 font-medium text-slate-500 text-sm sm:mt-0 dark:text-slate-400">
-            {t('numberOfPosts', { count: archiveData?.postCount || 0 })}
+            {t('numberOfPosts', { count: tagData.postCount })}
           </span>
         </div>
-        {archiveData?.postCount ? (
+        {tagData.description ? (
           <p className="mt-4 max-w-xl text-lg text-slate-700 dark:text-slate-300">
-            {t('description')}
+            {tagData.description}
           </p>
         ) : null}
       </section>
 
       <section>
-        {!!archiveData?.posts && archiveData.posts.length > 0 ? (
+        {!!tagData.posts && tagData.posts.length > 0 ? (
           <div className="space-y-20">
-            {archiveData.posts.map((post: PostListing) => (
+            {tagData.posts.map((post: PostListing) => (
               <BlogPostListing
                 category={post.category}
                 excerpt={post.excerpt}
@@ -81,9 +104,9 @@ const ArchivePage = async ({ searchParams }: ArchivePageProps) => {
         )}
       </section>
 
-      <Pagination basePath="/archive" currentPage={currentPage} totalPages={totalPages} />
+      <Pagination basePath={basePath} currentPage={currentPage} totalPages={totalPages} />
     </>
   );
 };
 
-export default ArchivePage;
+export default SingleTagPage;

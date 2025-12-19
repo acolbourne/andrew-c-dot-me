@@ -5,7 +5,10 @@
   },
   "archive": {
     "title": "Archive",
-    "description": "An archive of my posts."
+    "description": "View all of my previous posts.",
+    "browsingArchive": "Browsing",
+    "numberOfPosts": "{count, plural, =0 {No posts} one {1 post} other {# posts}}",
+    "noPostsFound": "No posts found."
   },
   "contact": {
     "title": "Contact Me",
@@ -43,6 +46,26 @@
   "homepage": {
     "latestArticles": "Latest Articles",
     "viewArchive": "View Archive"
+  },
+  "category": {
+    "title": "Category: {categoryName}",
+    "description": "Browse posts in this category",
+    "browsingCategory": "Browsing Category",
+    "numberOfPosts": "{count, plural, =0 {No posts} one {1 post} other {# posts}}",
+    "notFound": "Category Not Found",
+    "noPostsFound": "No posts found in this category."
+  },
+  "tag": {
+    "title": "Tag: {tagName}",
+    "description": "Browse posts with this tag",
+    "browsingTag": "Posts tagged with",
+    "numberOfPosts": "{count, plural, =0 {No posts} one {1 post} other {# posts}}",
+    "notFound": "Tag Not Found",
+    "noPostsFound": "No posts found with this tag."
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
   },
   "footer": {
     "copyright": "© {year} {websiteName}"

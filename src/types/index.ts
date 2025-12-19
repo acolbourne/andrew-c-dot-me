@@ -38,6 +38,30 @@ export type PostListing = {
 
 export type BlogPostListingProps = Omit<PostListing, '_id'>;
 
+export type CategoryPageProps = {
+  params: Promise<{
+    category?: string[];
+  }>;
+  searchParams?: Promise<{
+    page?: string;
+  }>;
+};
+
+export type TagPageProps = {
+  params: Promise<{
+    tag?: string[];
+  }>;
+  searchParams?: Promise<{
+    page?: string;
+  }>;
+};
+
+export type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+};
+
 export type ContactFormResult = {
   data: Response | null;
   error: Error | null;

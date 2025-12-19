@@ -3,18 +3,31 @@ import { getTranslations } from 'next-intl/server';
 import BlogPostListing from '@/components/BlogPostListing';
 import HeroSection from '@/components/HeroSection/page';
 import Pagination from '@/components/Pagination';
-import { POSTS_QUERY } from '@/sanity/groq/queries';
+import { ARCHIVE_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { PostListing } from '@/types';
 
-const Homepage = async () => {
-  const t = await getTranslations('homepage');
-  const posts = await client.fetch(POSTS_QUERY, {
-    categorySlug: null,
-    tagSlug: null,
-    start: 0,
-    end: 5
+type HomepageProps = {
+  searchParams?: Promise<{
+    page?: string;
+  }>;
+};
+
+const POSTS_PER_PAGE = 5;
+
+const Homepage = async ({ searchParams }: HomepageProps) => {
+  const { page } = searchParams ? await searchParams : { page: undefined };
+  const currentPage = page ? Number.parseInt(page, 10) : 1;
+  const start = (currentPage - 1) * POSTS_PER_PAGE;
+  const end = start + POSTS_PER_PAGE;
+
+  const homepageData = await client.fetch(ARCHIVE_QUERY, {
+    start,
+    end
   });
+
+  const t = await getTranslations('homepage');
+  const totalPages = Math.ceil((homepageData?.postCount || 0) / POSTS_PER_PAGE);
 
   return (
     <>
@@ -34,8 +47,8 @@ const Homepage = async () => {
         </div>
 
         <div className="space-y-20">
-          {!!posts && posts.length > 0
-            ? posts.map((post: PostListing) => (
+          {!!homepageData?.posts && homepageData.posts.length > 0
+            ? homepageData.posts.map((post: PostListing) => (
                 <BlogPostListing
                   category={post.category}
                   excerpt={post.excerpt}
@@ -50,7 +63,7 @@ const Homepage = async () => {
             : null}
         </div>
 
-        <Pagination />
+        <Pagination basePath="/" currentPage={currentPage} totalPages={totalPages} />
       </section>
     </>
   );

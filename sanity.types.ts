@@ -20,6 +20,7 @@ export type Tags = {
   _updatedAt: string;
   _rev: string;
   title?: string;
+  description?: string;
   slug?: Slug;
 };
 
@@ -52,7 +53,7 @@ export type Post = {
   };
   body?: Array<{
     children?: Array<{
-      marks?: string[];
+      marks?: Array<string>;
       text?: string;
       _type: 'span';
       _key: string;
@@ -106,6 +107,7 @@ export type Category = {
   _updatedAt: string;
   _rev: string;
   title?: string;
+  description?: string;
   slug?: Slug;
 };
 
@@ -221,3 +223,41 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./src/sanity/groq/queries.ts
+// Variable: POSTS_QUERY
+// Query: *[_type == "post"     && defined(slug.current)    && ($categorySlug == null || category->slug.current == $categorySlug)    && ($tagSlug == null || $tagSlug in tags[]->slug.current)  ] | order(publishedAt desc) [$start...$end] {    _id,    title,    "slug": slug.current,    publishedAt,    image,    "category": {      "title": category->title,      "slug": category->slug.current    },    "tags": tags[]->{      "title": title,      "slug": slug.current    },    "excerpt": pt::text(body)  }
+export type POSTS_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  publishedAt: string | null;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  } | null;
+  category: {
+    title: string | null;
+    slug: string | null;
+  };
+  tags: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  excerpt: string;
+}>;
+
+// Query TypeMap
+import '@sanity/client';
+declare module '@sanity/client' {
+  interface SanityQueries {
+    '\n  *[_type == "post" \n    && defined(slug.current)\n    && ($categorySlug == null || category->slug.current == $categorySlug)\n    && ($tagSlug == null || $tagSlug in tags[]->slug.current)\n  ] | order(publishedAt desc) [$start...$end] {\n    _id,\n    title,\n    "slug": slug.current,\n    publishedAt,\n    image,\n    "category": {\n      "title": category->title,\n      "slug": category->slug.current\n    },\n    "tags": tags[]->{\n      "title": title,\n      "slug": slug.current\n    },\n    "excerpt": pt::text(body)\n  }\n': POSTS_QUERYResult;
+  }
+}
