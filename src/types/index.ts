@@ -1,6 +1,7 @@
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import type { Metadata } from 'next/types';
 import type { JSX } from 'react';
+import type { Post } from '../../sanity.types';
 
 export type WebsiteConfig = Record<string, string>;
 export type SocialNetworks = Record<string, { url: string; icon: JSX.Element }>;
@@ -60,6 +61,29 @@ export type PaginationProps = {
   currentPage: number;
   totalPages: number;
   basePath: string;
+};
+
+export type SinglePostPageProps = {
+  params: Promise<{
+    post?: string[];
+  }>;
+};
+
+export type SinglePost = {
+  _id: string;
+  title: string;
+  slug: string;
+  publishedAt: string;
+  image?: SanityImageSource;
+  body: NonNullable<Post['body']>;
+  category?: {
+    title: string;
+    slug: string;
+  };
+  tags?: Array<{
+    title: string;
+    slug: string;
+  }>;
 };
 
 export type ContactFormResult = {

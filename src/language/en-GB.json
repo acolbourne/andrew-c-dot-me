@@ -63,6 +63,13 @@
     "notFound": "Tag Not Found",
     "noPostsFound": "No posts found with this tag."
   },
+  "singlePost": {
+    "backToBlog": "Back to the Blog",
+    "notFound": "Post Not Found",
+    "description": "Read this blog post",
+    "nextPost": "Next",
+    "previousPost": "Previous"
+  },
   "pagination": {
     "previous": "Previous",
     "next": "Next"
