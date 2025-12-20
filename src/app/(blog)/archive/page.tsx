@@ -1,6 +1,8 @@
 import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 import BlogPostListing from '@/components/BlogPostListing';
 import Pagination from '@/components/Pagination';
+import PostListingSkeleton from '@/components/Skeleton';
 import { seoMetadata } from '@/lib/metadata';
 import { ARCHIVE_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
@@ -22,6 +24,45 @@ export async function generateMetadata() {
     description: t('description')
   });
 }
+
+const PostsList = async ({ start, end }: { start: number; end: number }) => {
+  const archiveData = await client.fetch(ARCHIVE_QUERY, {
+    start,
+    end
+  });
+
+  if (!archiveData?.posts || archiveData.posts.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {archiveData.posts.map((post: PostListing) => (
+        <BlogPostListing
+          category={post.category}
+          excerpt={post.excerpt}
+          image={post.image}
+          key={post._id}
+          publishedAt={post.publishedAt}
+          slug={post.slug}
+          tags={post.tags}
+          title={post.title}
+        />
+      ))}
+    </>
+  );
+};
+
+const SkeletonFallback = () => {
+  const skeletonKeys = Array.from({ length: POSTS_PER_PAGE }, (_, i) => `archive-skeleton-${i}`);
+  return (
+    <>
+      {skeletonKeys.map((key) => (
+        <PostListingSkeleton key={key} />
+      ))}
+    </>
+  );
+};
 
 const ArchivePage = async ({ searchParams }: ArchivePageProps) => {
   const { page } = await searchParams;
@@ -61,24 +102,11 @@ const ArchivePage = async ({ searchParams }: ArchivePageProps) => {
       </section>
 
       <section>
-        {!!archiveData?.posts && archiveData.posts.length > 0 ? (
-          <div className="space-y-20">
-            {archiveData.posts.map((post: PostListing) => (
-              <BlogPostListing
-                category={post.category}
-                excerpt={post.excerpt}
-                image={post.image}
-                key={post._id}
-                publishedAt={post.publishedAt}
-                slug={post.slug}
-                tags={post.tags}
-                title={post.title}
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="text-slate-600 dark:text-slate-400">{t('noPostsFound')}</p>
-        )}
+        <div className="space-y-20">
+          <Suspense fallback={<SkeletonFallback />}>
+            <PostsList end={end} start={start} />
+          </Suspense>
+        </div>
       </section>
 
       <Pagination basePath="/archive" currentPage={currentPage} totalPages={totalPages} />

@@ -74,6 +74,9 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "loading": {
+    "loading": "Loading..."
+  },
   "footer": {
     "copyright": "© {year} {websiteName}"
   }

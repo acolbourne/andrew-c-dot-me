@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 import BlogPostListing from '@/components/BlogPostListing';
 import Pagination from '@/components/Pagination';
+import PostListingSkeleton from '@/components/Skeleton';
 import { seoMetadata } from '@/lib/metadata';
 import { TAG_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
@@ -32,6 +34,54 @@ export async function generateMetadata({ params }: TagPageProps) {
     description: tagData.description || t('description')
   });
 }
+
+const PostsList = async ({
+  end,
+  start,
+  tagSlug
+}: {
+  end: number;
+  start: number;
+  tagSlug: string;
+}) => {
+  const tagData = await client.fetch(TAG_QUERY, {
+    tagSlug,
+    start,
+    end
+  });
+
+  if (!tagData?.posts || tagData.posts.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {tagData.posts.map((post: PostListing) => (
+        <BlogPostListing
+          category={post.category}
+          excerpt={post.excerpt}
+          image={post.image}
+          key={post._id}
+          publishedAt={post.publishedAt}
+          slug={post.slug}
+          tags={post.tags}
+          title={post.title}
+        />
+      ))}
+    </>
+  );
+};
+
+const SkeletonFallback = () => {
+  const skeletonKeys = Array.from({ length: POSTS_PER_PAGE }, (_, i) => `tag-skeleton-${i}`);
+  return (
+    <>
+      {skeletonKeys.map((key) => (
+        <PostListingSkeleton key={key} />
+      ))}
+    </>
+  );
+};
 
 const SingleTagPage = async ({ params, searchParams }: TagPageProps) => {
   const { tag } = await params;
@@ -84,24 +134,11 @@ const SingleTagPage = async ({ params, searchParams }: TagPageProps) => {
       </section>
 
       <section>
-        {!!tagData.posts && tagData.posts.length > 0 ? (
-          <div className="space-y-20">
-            {tagData.posts.map((post: PostListing) => (
-              <BlogPostListing
-                category={post.category}
-                excerpt={post.excerpt}
-                image={post.image}
-                key={post._id}
-                publishedAt={post.publishedAt}
-                slug={post.slug}
-                tags={post.tags}
-                title={post.title}
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="text-slate-600 dark:text-slate-400">{t('noPostsFound')}</p>
-        )}
+        <div className="space-y-20">
+          <Suspense fallback={<SkeletonFallback />}>
+            <PostsList end={end} start={start} tagSlug={tagSlug} />
+          </Suspense>
+        </div>
       </section>
 
       <Pagination basePath={basePath} currentPage={currentPage} totalPages={totalPages} />

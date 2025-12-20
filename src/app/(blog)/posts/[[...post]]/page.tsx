@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { PortableText } from 'next-sanity';
+import { Suspense } from 'react';
+import SinglePostSkeleton from '@/components/Skeleton/single';
 import { seoMetadata } from '@/lib/metadata';
 import { ADJACENT_POSTS_QUERY, SINGLE_POST_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
@@ -31,14 +33,8 @@ export async function generateMetadata({ params }: SinglePostPageProps) {
   });
 }
 
-const SinglePostPage = async ({ params }: SinglePostPageProps) => {
-  const { post } = await params;
-  const postSlug = post?.join('/') || '';
+const PostContent = async ({ postSlug }: { postSlug: string }) => {
   const t = await getTranslations('singlePost');
-
-  if (!postSlug) {
-    notFound();
-  }
 
   const postData: SinglePost | null = await client.fetch(SINGLE_POST_QUERY, {
     postSlug
@@ -177,6 +173,21 @@ const SinglePostPage = async ({ params }: SinglePostPageProps) => {
         ) : null}
       </article>
     </>
+  );
+};
+
+const SinglePostPage = async ({ params }: SinglePostPageProps) => {
+  const { post } = await params;
+  const postSlug = post?.join('/') || '';
+
+  if (!postSlug) {
+    notFound();
+  }
+
+  return (
+    <Suspense fallback={<SinglePostSkeleton />}>
+      <PostContent postSlug={postSlug} />
+    </Suspense>
   );
 };
 

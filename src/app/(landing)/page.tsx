@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 import BlogPostListing from '@/components/BlogPostListing';
 import HeroSection from '@/components/HeroSection/page';
 import Pagination from '@/components/Pagination';
+import PostListingSkeleton from '@/components/Skeleton';
 import { ARCHIVE_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { PostListing } from '@/types';
@@ -14,6 +16,45 @@ type HomepageProps = {
 };
 
 const POSTS_PER_PAGE = 5;
+
+const PostsList = async ({ start, end }: { start: number; end: number }) => {
+  const homepageData = await client.fetch(ARCHIVE_QUERY, {
+    start,
+    end
+  });
+
+  if (!homepageData?.posts || homepageData.posts.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {homepageData.posts.map((post: PostListing) => (
+        <BlogPostListing
+          category={post.category}
+          excerpt={post.excerpt}
+          image={post.image}
+          key={post._id}
+          publishedAt={post.publishedAt}
+          slug={post.slug}
+          tags={post.tags}
+          title={post.title}
+        />
+      ))}
+    </>
+  );
+};
+
+const SkeletonFallback = () => {
+  const skeletonKeys = Array.from({ length: POSTS_PER_PAGE }, (_, i) => `skeleton-${i}`);
+  return (
+    <>
+      {skeletonKeys.map((key) => (
+        <PostListingSkeleton key={key} />
+      ))}
+    </>
+  );
+};
 
 const Homepage = async ({ searchParams }: HomepageProps) => {
   const { page } = searchParams ? await searchParams : { page: undefined };
@@ -47,20 +88,9 @@ const Homepage = async ({ searchParams }: HomepageProps) => {
         </div>
 
         <div className="space-y-20">
-          {!!homepageData?.posts && homepageData.posts.length > 0
-            ? homepageData.posts.map((post: PostListing) => (
-                <BlogPostListing
-                  category={post.category}
-                  excerpt={post.excerpt}
-                  image={post.image}
-                  key={post._id}
-                  publishedAt={post.publishedAt}
-                  slug={post.slug}
-                  tags={post.tags}
-                  title={post.title}
-                />
-              ))
-            : null}
+          <Suspense fallback={<SkeletonFallback />}>
+            <PostsList end={end} start={start} />
+          </Suspense>
         </div>
 
         <Pagination basePath="/" currentPage={currentPage} totalPages={totalPages} />

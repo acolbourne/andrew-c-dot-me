@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 import BlogPostListing from '@/components/BlogPostListing';
 import Pagination from '@/components/Pagination';
+import PostListingSkeleton from '@/components/Skeleton';
 import { seoMetadata } from '@/lib/metadata';
 import { CATEGORY_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
@@ -32,6 +34,54 @@ export async function generateMetadata({ params }: CategoryPageProps) {
     description: categoryData.description || t('description')
   });
 }
+
+const PostsList = async ({
+  categorySlug,
+  end,
+  start
+}: {
+  categorySlug: string;
+  end: number;
+  start: number;
+}) => {
+  const categoryData = await client.fetch(CATEGORY_QUERY, {
+    categorySlug,
+    start,
+    end
+  });
+
+  if (!categoryData?.posts || categoryData.posts.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {categoryData.posts.map((post: PostListing) => (
+        <BlogPostListing
+          category={post.category}
+          excerpt={post.excerpt}
+          image={post.image}
+          key={post._id}
+          publishedAt={post.publishedAt}
+          slug={post.slug}
+          tags={post.tags}
+          title={post.title}
+        />
+      ))}
+    </>
+  );
+};
+
+const SkeletonFallback = () => {
+  const skeletonKeys = Array.from({ length: POSTS_PER_PAGE }, (_, i) => `category-skeleton-${i}`);
+  return (
+    <>
+      {skeletonKeys.map((key) => (
+        <PostListingSkeleton key={key} />
+      ))}
+    </>
+  );
+};
 
 const SingleCategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
   const { category } = await params;
@@ -84,24 +134,11 @@ const SingleCategoryPage = async ({ params, searchParams }: CategoryPageProps) =
       </section>
 
       <section>
-        {!!categoryData.posts && categoryData.posts.length > 0 ? (
-          <div className="space-y-20">
-            {categoryData.posts.map((post: PostListing) => (
-              <BlogPostListing
-                category={post.category}
-                excerpt={post.excerpt}
-                image={post.image}
-                key={post._id}
-                publishedAt={post.publishedAt}
-                slug={post.slug}
-                tags={post.tags}
-                title={post.title}
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="text-slate-600 dark:text-slate-400">{t('noPostsFound')}</p>
-        )}
+        <div className="space-y-20">
+          <Suspense fallback={<SkeletonFallback />}>
+            <PostsList categorySlug={categorySlug} end={end} start={start} />
+          </Suspense>
+        </div>
       </section>
 
       <Pagination basePath={basePath} currentPage={currentPage} totalPages={totalPages} />
