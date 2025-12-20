@@ -43,7 +43,12 @@ export async function GET() {
       description: post.excerpt || '',
       content: post.excerpt || '',
       date: new Date(post.publishedAt),
-      image: imageUrl,
+      ...(imageUrl && {
+        enclosure: {
+          url: imageUrl,
+          type: 'image/jpeg'
+        }
+      }),
       author: [
         {
           name: websiteSettings.name
@@ -84,7 +89,13 @@ export async function GET() {
     });
   }
 
-  return new Response(feed.atom1(), {
+  let atomXml = feed.atom1();
+  atomXml = atomXml.replace(/(href|url|src)="([^"]*)"/g, (match, attr, url) => {
+    const escaped = url.replace(/&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[\da-f]+;)/gi, '&amp;');
+    return escaped !== url ? `${attr}="${escaped}"` : match;
+  });
+
+  return new Response(atomXml, {
     headers: {
       'Content-Type': 'application/atom+xml; charset=utf-8',
       'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400'
