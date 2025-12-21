@@ -102,6 +102,28 @@ export type ContactFormResult = {
   error: Error | null;
 };
 
+export type RecaptchaVerify = {
+  success: boolean;
+  score?: number;
+  error?: string;
+};
+
+export type RecaptchaResponse = {
+  success: boolean;
+  score?: number;
+  action?: string;
+  challenge_ts?: string;
+  hostname?: string;
+  'error-codes'?: string[];
+};
+
 export type Success<T> = { data: T; error: null };
 export type Failure<E> = { data: null; error: E };
 export type Result<T, E = Error> = Success<T> | Failure<E>;
+
+export interface RecaptchaWindow extends Window {
+  grecaptcha?: {
+    ready: (callback: () => void) => void;
+    execute: (siteKey: string, options: { action: string }) => Promise<string>;
+  };
+}

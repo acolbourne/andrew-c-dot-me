@@ -72,3 +72,7 @@ header .mode-toggle {
 .blog-post-listing {
   @apply flex flex-col gap-5;
 }
+
+.grecaptcha-badge {
+  visibility: hidden;
+}

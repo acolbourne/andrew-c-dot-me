@@ -4,13 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import DOMPurify from 'dompurify';
 import { CircleCheckBig, CircleX, LoaderCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 import { env } from '@/env';
 import { tryCatch } from '@/lib/try-catch';
 import { ContactFormSchema } from '@/schemas';
-import type { ContactFormResult } from '@/types';
+import type { ContactFormResult, RecaptchaWindow } from '@/types';
 import Alert from '../Alert';
 import { Button } from '../ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '../ui/form';
@@ -20,6 +20,7 @@ export const ContactForm: React.FC = () => {
   const t = useTranslations('contactForm');
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const [formResult, setFormResult] = useState<ContactFormResult>({ data: null, error: null });
+  const [recaptchaReady, setRecaptchaReady] = useState<boolean>(false);
 
   const theContactForm = useForm<z.infer<typeof ContactFormSchema>>({
     resolver: zodResolver(ContactFormSchema),
@@ -30,8 +31,52 @@ export const ContactForm: React.FC = () => {
     }
   });
 
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?render=${env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      const win = window as RecaptchaWindow;
+      if (win.grecaptcha) {
+        win.grecaptcha.ready(() => {
+          setRecaptchaReady(true);
+        });
+      }
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      const existingScript = document.querySelector(`script[src*="recaptcha/api.js"]`);
+      if (existingScript) {
+        document.head.removeChild(existingScript);
+      }
+    };
+  }, []);
+
   const submitHandler = async (submission: z.infer<typeof ContactFormSchema>) => {
     setDisableSubmit(true);
+
+    const win = window as RecaptchaWindow;
+    let recaptchaToken = '';
+
+    if (recaptchaReady && win.grecaptcha) {
+      try {
+        recaptchaToken = await win.grecaptcha.execute(env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY, {
+          action: 'contact_form_submission'
+        });
+      } catch (recaptchaError) {
+        setFormResult({
+          data: null,
+          error:
+            recaptchaError instanceof Error
+              ? recaptchaError
+              : new Error('Failed to execute reCAPTCHA')
+        });
+        setDisableSubmit(false);
+        return;
+      }
+    }
 
     const { data, error } = await tryCatch(
       fetch(env.NEXT_PUBLIC_CONTACT_FORM_ENDPOINT, {
@@ -45,7 +90,8 @@ export const ContactForm: React.FC = () => {
           email: DOMPurify.sanitize(submission.email),
           message: DOMPurify.sanitize(submission.message),
           subject: t('subject'),
-          access_key: env.NEXT_PUBLIC_CONTACT_FORM_PUBLIC_KEY
+          access_key: env.NEXT_PUBLIC_CONTACT_FORM_PUBLIC_KEY,
+          recaptcha_token: recaptchaToken
         })
       })
     );
