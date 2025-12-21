@@ -22,7 +22,7 @@
     "success": "Your message has been sent successfully.",
     "error": "There was a problem with sending your message. Please try again.",
     "name": "Name",
-    "namePlaceholder": "Joe Bloggs",
+    "namePlaceholder": "Your Name",
     "email": "Email Address",
     "emailPlaceholder": "your@email.com",
     "message": "Your Message",

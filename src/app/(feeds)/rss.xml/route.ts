@@ -3,8 +3,91 @@ import { domain, websiteSettings } from '@/constants';
 import { POSTS_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import { urlFor } from '@/sanity/lib/image';
+import type { FeedPost } from '@/types';
+
+function createFeedItem(post: FeedPost) {
+  const postUrl = `${domain}/posts/${post.slug}`;
+  const imageUrl = post.image ? urlFor(post.image).width(1200).height(600).url() : undefined;
+
+  return {
+    title: post.title,
+    id: postUrl,
+    link: postUrl,
+    description: post.excerpt || '',
+    content: post.excerpt || '',
+    date: new Date(post.publishedAt),
+    ...(imageUrl && {
+      enclosure: {
+        url: imageUrl,
+        type: 'image/jpeg'
+      }
+    }),
+    author: [
+      {
+        name: websiteSettings.name
+      }
+    ],
+    category:
+      post.category?.title && post.category?.slug
+        ? [
+            {
+              name: post.category.title,
+              term: post.category.slug
+            }
+          ]
+        : [],
+    ...(post.tags && post.tags.length > 0
+      ? {
+          extensions: [
+            {
+              name: '_tags',
+              objects: post.tags
+                .filter(
+                  (tag: {
+                    title: string | null;
+                    slug: string | null;
+                  }): tag is {
+                    title: string;
+                    slug: string;
+                  } => Boolean(tag.title && tag.slug)
+                )
+                .map((tag) => ({
+                  name: tag.title,
+                  term: tag.slug
+                }))
+            }
+          ]
+        }
+      : {})
+  };
+}
 
 async function generateFeed() {
+  const posts = await client.fetch(POSTS_QUERY, {
+    categorySlug: null,
+    tagSlug: null,
+    start: 0,
+    end: 50
+  });
+
+  const validPosts = posts.filter(
+    (post: {
+      slug: string | null;
+      publishedAt: string | null;
+      title: string | null;
+    }): post is {
+      slug: string;
+      publishedAt: string;
+      title: string;
+    } => Boolean(post.slug && post.publishedAt && post.title)
+  );
+
+  let latestPostDate = new Date();
+  if (validPosts.length > 0) {
+    const dates = validPosts.map((post) => new Date(post.publishedAt as string).getTime());
+    latestPostDate = new Date(Math.max(...dates));
+  }
+
   const feed = new Feed({
     title: websiteSettings.name,
     description: websiteSettings.description,
@@ -13,6 +96,7 @@ async function generateFeed() {
     language: websiteSettings.defaultLocale,
     copyright: `© ${new Date().getFullYear()}, ${websiteSettings.name}`,
     generator: domain,
+    updated: latestPostDate,
     feedLinks: {
       rss: `${domain}/rss.xml`
     },
@@ -21,72 +105,25 @@ async function generateFeed() {
     }
   });
 
-  const posts = await client.fetch(POSTS_QUERY, {
-    categorySlug: null,
-    tagSlug: null,
-    start: 0,
-    end: 50
-  });
-
   for (const post of posts) {
     if (!(post.slug && post.publishedAt && post.title)) {
       continue;
     }
 
-    const postUrl = `${domain}/posts/${post.slug}`;
-    const imageUrl = post.image ? urlFor(post.image).width(1200).height(600).url() : undefined;
-
-    feed.addItem({
-      title: post.title,
-      id: postUrl,
-      link: postUrl,
-      description: post.excerpt || '',
-      content: post.excerpt || '',
-      date: new Date(post.publishedAt),
-      ...(imageUrl && {
-        enclosure: {
-          url: imageUrl,
-          type: 'image/jpeg'
-        }
-      }),
-      author: [
-        {
-          name: websiteSettings.name
-        }
-      ],
-      category:
-        post.category?.title && post.category?.slug
-          ? [
-              {
-                name: post.category.title,
-                term: post.category.slug
-              }
-            ]
-          : [],
-      ...(post.tags && post.tags.length > 0
-        ? {
-            extensions: [
-              {
-                name: '_tags',
-                objects: post.tags
-                  .filter(
-                    (tag: {
-                      title: string | null;
-                      slug: string | null;
-                    }): tag is {
-                      title: string;
-                      slug: string;
-                    } => Boolean(tag.title && tag.slug)
-                  )
-                  .map((tag) => ({
-                    name: tag.title,
-                    term: tag.slug
-                  }))
-              }
-            ]
-          }
-        : {})
-    });
+    feed.addItem(
+      createFeedItem({
+        slug: post.slug,
+        title: post.title,
+        publishedAt: post.publishedAt,
+        excerpt: post.excerpt || null,
+        image: post.image || null,
+        category:
+          post.category?.title && post.category?.slug
+            ? { title: post.category.title, slug: post.category.slug }
+            : null,
+        tags: post.tags || null
+      })
+    );
   }
 
   return feed;

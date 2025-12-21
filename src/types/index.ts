@@ -37,6 +37,16 @@ export type PostListing = {
   excerpt?: string;
 };
 
+export type FeedPost = {
+  slug: string;
+  title: string;
+  publishedAt: string;
+  excerpt: string | null;
+  image: { asset?: { _ref: string } } | null;
+  category: { title: string; slug: string } | null;
+  tags: Array<{ title: string | null; slug: string | null }> | null;
+};
+
 export type PostSlugs = Pick<PostListing, 'slug' | 'publishedAt'>;
 export type BlogPostListingProps = Omit<PostListing, '_id'>;
 
