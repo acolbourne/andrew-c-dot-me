@@ -4,3 +4,4 @@
 ☐ I've added a temporary favicon (from the old version of the site) to the metadata. Replace this with a new one.
 ☐ Some of the category pages have been put together a little roughly/quickly to get them working. Refactor and improve them.
 ✔ Likewise with feeds. They do work, but could be improved. Add a visual output to feeds that works when accessed directly through a browser. @done (12/21/2025, 9:33:26 AM)
+☐ Use Sanity to manage pages as well as blog posts.
