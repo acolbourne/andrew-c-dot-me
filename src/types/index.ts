@@ -37,6 +37,7 @@ export type PostListing = {
   excerpt?: string;
 };
 
+export type PostSlugs = Pick<PostListing, 'slug' | 'publishedAt'>;
 export type BlogPostListingProps = Omit<PostListing, '_id'>;
 
 export type CategoryPageProps = {

@@ -1,8 +1,13 @@
 import type { MetadataRoute } from 'next';
 import { domain } from '@/constants';
+import { POST_SLUGS_QUERY } from '@/sanity/groq/queries';
+import { client } from '@/sanity/lib/client';
+import type { PostSlugs } from '@/types';
 
-export default function Sitemap(): MetadataRoute.Sitemap {
-  return [
+export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = await client.fetch<PostSlugs[]>(POST_SLUGS_QUERY);
+
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: domain,
       lastModified: new Date(),
@@ -34,4 +39,13 @@ export default function Sitemap(): MetadataRoute.Sitemap {
       priority: 0.5
     }
   ];
+
+  const blogPosts: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${domain}/posts/${post.slug}`,
+    lastModified: new Date(post.publishedAt),
+    changeFrequency: 'weekly',
+    priority: 0.7
+  }));
+
+  return [...staticPages, ...blogPosts];
 }

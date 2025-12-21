@@ -23,6 +23,13 @@ export const POSTS_QUERY = defineQuery(`
   }
 `);
 
+export const POST_SLUGS_QUERY = defineQuery(`
+    *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+      "slug": slug.current,
+      publishedAt
+    }
+`);
+
 export const CATEGORY_QUERY = defineQuery(`
   *[_type == "category" && slug.current == $categorySlug][0] {
     _id,
