@@ -1,5 +1,5 @@
 import Providers from '@/components/Providers';
-import { defaultLocale, websiteSettings } from '@/constants';
+import { defaultLocale, domain, websiteSettings } from '@/constants';
 import { seoMetadata } from '@/lib/metadata';
 import type { ExtraMetadata } from '@/types';
 import { interFont } from './typography';
@@ -15,6 +15,14 @@ export const metadata: ExtraMetadata = seoMetadata({
     icon: websiteSettings.favicon ?? null,
     shortcut: websiteSettings.favicon ?? null,
     apple: websiteSettings.favicon ?? null
+  },
+  alternates: {
+    types: {
+      'application/atom+xml': `${domain}/atom.xml`,
+      'application/rss+xml': `${domain}/rss.xml`,
+      'application/json': `${domain}/posts.json`,
+      'application/xml': `${domain}/sitemap.xml`
+    }
   }
 });
 

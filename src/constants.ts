@@ -14,7 +14,6 @@ export const websiteSettings: WebsiteConfig = {
 
 export const navItems: NavItems = {
   blog: { url: '/', name: 'Blog' },
-  about: { url: '/about-me', name: 'About' },
   contact: { url: '/contact-me', name: 'Contact' }
 };
 

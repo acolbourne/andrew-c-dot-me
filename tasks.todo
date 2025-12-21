@@ -3,3 +3,4 @@
 ☐ Add anti-spam features to the contact form, including a CAPTCHA.
 ☐ I've added a temporary favicon (from the old version of the site) to the metadata. Replace this with a new one.
 ☐ Some of the category pages have been put together a little roughly/quickly to get them working. Refactor and improve them.
+☐ Likewise with feeds. They do work, but could be improved. Add a visual output to feeds that works when accessed directly through a browser.
