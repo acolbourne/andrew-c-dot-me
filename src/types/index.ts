@@ -97,6 +97,18 @@ export type SinglePost = {
   }>;
 };
 
+export type SocialShareProps = {
+  title: string;
+  url: string;
+  description?: string;
+};
+
+export type SocialShareLink = {
+  name: string;
+  icon: React.ElementType;
+  url: string;
+};
+
 export type ContactFormResult = {
   data: Response | null;
   error: Error | null;

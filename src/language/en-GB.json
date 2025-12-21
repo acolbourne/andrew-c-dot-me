@@ -70,6 +70,15 @@
     "nextPost": "Next",
     "previousPost": "Previous"
   },
+  "socialShare": {
+    "share": "Share this post:",
+    "shareOn": "Share on {name}",
+    "x": "X",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "reddit": "Reddit",
+    "email": "Email"
+  },
   "pagination": {
     "previous": "Previous",
     "next": "Next"

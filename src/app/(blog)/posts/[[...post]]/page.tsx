@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import { PortableText } from 'next-sanity';
 import { Suspense } from 'react';
 import SinglePostSkeleton from '@/components/Skeleton/single';
+import SocialShare from '@/components/SocialShare';
 import { seoMetadata } from '@/lib/metadata';
 import { ADJACENT_POSTS_QUERY, SINGLE_POST_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
@@ -122,6 +123,8 @@ const PostContent = async ({ postSlug }: { postSlug: string }) => {
             <PortableText value={postData.body} />
           </div>
         ) : null}
+
+        <SocialShare title={postData.title} url={`/posts/${postData.slug}`} />
 
         {!!postData.tags && postData.tags.length > 0 ? (
           <div className="mt-12 border-slate-200 border-t pt-8 dark:border-slate-800">
