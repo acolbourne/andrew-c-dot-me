@@ -147,3 +147,25 @@ export const ADJACENT_POSTS_QUERY = defineQuery(`
     }
   }
 `);
+
+export const PAGE_QUERY = defineQuery(`
+  *[_type == "page" && slug.current == $pageSlug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    content
+  }
+`);
+
+export const PAGE_SLUGS_QUERY = defineQuery(`
+  *[_type == "page" && defined(slug.current)] {
+    "slug": slug.current
+  }
+`);
+
+export const PAGES_NAV_QUERY = defineQuery(`
+  *[_type == "page" && defined(slug.current)] | order(title asc) {
+    title,
+    "slug": slug.current
+  }
+`);

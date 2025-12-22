@@ -13,6 +13,40 @@
  */
 
 // Source: schema.json
+export type Page = {
+  _id: string;
+  _type: 'page';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  content?: Array<{
+    children?: Array<{
+      marks?: string[];
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+};
+
+export type Slug = {
+  _type: 'slug';
+  current?: string;
+  source?: string;
+};
+
 export type Tags = {
   _id: string;
   _type: 'tags';
@@ -22,12 +56,6 @@ export type Tags = {
   title?: string;
   description?: string;
   slug?: Slug;
-};
-
-export type Slug = {
-  _type: 'slug';
-  current?: string;
-  source?: string;
 };
 
 export type Post = {
@@ -53,7 +81,7 @@ export type Post = {
   };
   body?: Array<{
     children?: Array<{
-      marks?: Array<string>;
+      marks?: string[];
       text?: string;
       _type: 'span';
       _key: string;
@@ -208,8 +236,9 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
-  | Tags
+  | Page
   | Slug
+  | Tags
   | Post
   | SanityImageCrop
   | SanityImageHotspot
@@ -253,11 +282,185 @@ export type POSTS_QUERYResult = Array<{
   }> | null;
   excerpt: string;
 }>;
+// Variable: POST_SLUGS_QUERY
+// Query: *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {      "slug": slug.current,      publishedAt    }
+export type POST_SLUGS_QUERYResult = Array<{
+  slug: string | null;
+  publishedAt: string | null;
+}>;
+// Variable: CATEGORY_QUERY
+// Query: *[_type == "category" && slug.current == $categorySlug][0] {    _id,    title,    description,    "slug": slug.current,    "postCount": count(*[_type == "post" && category->slug.current == $categorySlug && defined(slug.current)]),    "posts": *[_type == "post"       && category->slug.current == $categorySlug      && defined(slug.current)    ] | order(publishedAt desc) [$start...$end] {      _id,      title,      "slug": slug.current,      publishedAt,      image,      "category": {        "title": category->title,        "slug": category->slug.current      },      "tags": tags[]->{        "title": title,        "slug": slug.current      },      "excerpt": pt::text(body)    }  }
+export type CATEGORY_QUERYResult = {
+  _id: string;
+  title: string | null;
+  description: string | null;
+  slug: string | null;
+  postCount: number;
+  posts: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    publishedAt: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: 'image';
+    } | null;
+    category: {
+      title: string | null;
+      slug: string | null;
+    };
+    tags: Array<{
+      title: string | null;
+      slug: string | null;
+    }> | null;
+    excerpt: string;
+  }>;
+} | null;
+// Variable: TAG_QUERY
+// Query: *[_type == "tags" && slug.current == $tagSlug][0] {    _id,    title,    description,    "slug": slug.current,    "postCount": count(*[_type == "post" && $tagSlug in tags[]->slug.current && defined(slug.current)]),    "posts": *[_type == "post"       && $tagSlug in tags[]->slug.current      && defined(slug.current)    ] | order(publishedAt desc) [$start...$end] {      _id,      title,      "slug": slug.current,      publishedAt,      image,      "category": {        "title": category->title,        "slug": category->slug.current      },      "tags": tags[]->{        "title": title,        "slug": slug.current      },      "excerpt": pt::text(body)    }  }
+export type TAG_QUERYResult = {
+  _id: string;
+  title: string | null;
+  description: string | null;
+  slug: string | null;
+  postCount: number;
+  posts: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    publishedAt: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: 'image';
+    } | null;
+    category: {
+      title: string | null;
+      slug: string | null;
+    };
+    tags: Array<{
+      title: string | null;
+      slug: string | null;
+    }> | null;
+    excerpt: string;
+  }>;
+} | null;
+// Variable: ARCHIVE_QUERY
+// Query: {    "postCount": count(*[_type == "post" && defined(slug.current)]),    "posts": *[_type == "post" && defined(slug.current)] | order(publishedAt desc) [$start...$end] {      _id,      title,      "slug": slug.current,      publishedAt,      image,      "category": {        "title": category->title,        "slug": category->slug.current      },      "tags": tags[]->{        "title": title,        "slug": slug.current      },      "excerpt": pt::text(body)    }  }
+export type ARCHIVE_QUERYResult = {
+  postCount: number;
+  posts: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    publishedAt: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: 'image';
+    } | null;
+    category: {
+      title: string | null;
+      slug: string | null;
+    };
+    tags: Array<{
+      title: string | null;
+      slug: string | null;
+    }> | null;
+    excerpt: string;
+  }>;
+};
+// Variable: SINGLE_POST_QUERY
+// Query: *[_type == "post" && slug.current == $postSlug][0] {    _id,    title,    "slug": slug.current,    publishedAt,    image,    body,    "category": {      "title": category->title,      "slug": category->slug.current    },    "tags": tags[]->{      "title": title,      "slug": slug.current    }  }
+export type SINGLE_POST_QUERYResult = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  publishedAt: string | null;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  } | null;
+  body: Array<{
+    children?: Array<{
+      marks?: string[];
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }> | null;
+  category: {
+    title: string | null;
+    slug: string | null;
+  };
+  tags: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+} | null;
+// Variable: ADJACENT_POSTS_QUERY
+// Query: {    "previous": *[_type == "post"       && defined(slug.current)      && publishedAt > $publishedAt    ] | order(publishedAt asc) [0] {      title,      "slug": slug.current    },    "next": *[_type == "post"       && defined(slug.current)      && publishedAt < $publishedAt    ] | order(publishedAt desc) [0] {      title,      "slug": slug.current    }  }
+export type ADJACENT_POSTS_QUERYResult = {
+  previous: {
+    title: string | null;
+    slug: string | null;
+  } | null;
+  next: {
+    title: string | null;
+    slug: string | null;
+  } | null;
+};
 
 // Query TypeMap
 import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[_type == "post" \n    && defined(slug.current)\n    && ($categorySlug == null || category->slug.current == $categorySlug)\n    && ($tagSlug == null || $tagSlug in tags[]->slug.current)\n  ] | order(publishedAt desc) [$start...$end] {\n    _id,\n    title,\n    "slug": slug.current,\n    publishedAt,\n    image,\n    "category": {\n      "title": category->title,\n      "slug": category->slug.current\n    },\n    "tags": tags[]->{\n      "title": title,\n      "slug": slug.current\n    },\n    "excerpt": pt::text(body)\n  }\n': POSTS_QUERYResult;
+    '\n    *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {\n      "slug": slug.current,\n      publishedAt\n    }\n': POST_SLUGS_QUERYResult;
+    '\n  *[_type == "category" && slug.current == $categorySlug][0] {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    "postCount": count(*[_type == "post" && category->slug.current == $categorySlug && defined(slug.current)]),\n    "posts": *[_type == "post" \n      && category->slug.current == $categorySlug\n      && defined(slug.current)\n    ] | order(publishedAt desc) [$start...$end] {\n      _id,\n      title,\n      "slug": slug.current,\n      publishedAt,\n      image,\n      "category": {\n        "title": category->title,\n        "slug": category->slug.current\n      },\n      "tags": tags[]->{\n        "title": title,\n        "slug": slug.current\n      },\n      "excerpt": pt::text(body)\n    }\n  }\n': CATEGORY_QUERYResult;
+    '\n  *[_type == "tags" && slug.current == $tagSlug][0] {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    "postCount": count(*[_type == "post" && $tagSlug in tags[]->slug.current && defined(slug.current)]),\n    "posts": *[_type == "post" \n      && $tagSlug in tags[]->slug.current\n      && defined(slug.current)\n    ] | order(publishedAt desc) [$start...$end] {\n      _id,\n      title,\n      "slug": slug.current,\n      publishedAt,\n      image,\n      "category": {\n        "title": category->title,\n        "slug": category->slug.current\n      },\n      "tags": tags[]->{\n        "title": title,\n        "slug": slug.current\n      },\n      "excerpt": pt::text(body)\n    }\n  }\n': TAG_QUERYResult;
+    '\n  {\n    "postCount": count(*[_type == "post" && defined(slug.current)]),\n    "posts": *[_type == "post" && defined(slug.current)] | order(publishedAt desc) [$start...$end] {\n      _id,\n      title,\n      "slug": slug.current,\n      publishedAt,\n      image,\n      "category": {\n        "title": category->title,\n        "slug": category->slug.current\n      },\n      "tags": tags[]->{\n        "title": title,\n        "slug": slug.current\n      },\n      "excerpt": pt::text(body)\n    }\n  }\n': ARCHIVE_QUERYResult;
+    '\n  *[_type == "post" && slug.current == $postSlug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    publishedAt,\n    image,\n    body,\n    "category": {\n      "title": category->title,\n      "slug": category->slug.current\n    },\n    "tags": tags[]->{\n      "title": title,\n      "slug": slug.current\n    }\n  }\n': SINGLE_POST_QUERYResult;
+    '\n  {\n    "previous": *[_type == "post" \n      && defined(slug.current)\n      && publishedAt > $publishedAt\n    ] | order(publishedAt asc) [0] {\n      title,\n      "slug": slug.current\n    },\n    "next": *[_type == "post" \n      && defined(slug.current)\n      && publishedAt < $publishedAt\n    ] | order(publishedAt desc) [0] {\n      title,\n      "slug": slug.current\n    }\n  }\n': ADJACENT_POSTS_QUERYResult;
   }
 }

@@ -70,6 +70,10 @@
     "nextPost": "Next",
     "previousPost": "Previous"
   },
+  "generatedPages": {
+    "notFound": "Page Not Found",
+    "notFoundDescription": "The page you are looking for does not exist."
+  },
   "socialShare": {
     "share": "Share this post:",
     "shareOn": "Share on {name}",
