@@ -13,7 +13,7 @@ const BlogPostListing: React.FC<BlogPostListingProps> = ({
   excerpt
 }) => {
   const imageUrl = image ? urlFor(image).width(800).height(560).url() : '/images/demo.jpg';
-  const formattedDate = new Date(publishedAt).toLocaleDateString('en-GB', {
+  const formattedDate = new Date(publishedAt ?? new Date()).toLocaleDateString('en-GB', {
     month: 'long',
     day: 'numeric',
     year: 'numeric'
@@ -26,7 +26,7 @@ const BlogPostListing: React.FC<BlogPostListingProps> = ({
     <article className="group blog-post-listing">
       <Link className="block overflow-hidden rounded-xl shadow-sm" href={`/posts/${slug}`}>
         <Image
-          alt={title}
+          alt={title ?? ''}
           className="h-56 w-full transform object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
           height={560}
           src={imageUrl}
