@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: TagPageProps) {
   }
 
   return seoMetadata({
-    title: t('title', { tagName: tagData.title }),
+    title: t('title', { tagName: tagData.title ?? '' }),
     description: tagData.description || t('description')
   });
 }

@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: CategoryPageProps) {
   }
 
   return seoMetadata({
-    title: t('title', { categoryName: categoryData.title }),
+    title: t('title', { categoryName: categoryData.title ?? '' }),
     description: categoryData.description || t('description')
   });
 }

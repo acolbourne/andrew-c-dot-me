@@ -72,7 +72,8 @@
   },
   "generatedPages": {
     "notFound": "Page Not Found",
-    "notFoundDescription": "The page you are looking for does not exist."
+    "notFoundDescription": "The page you are looking for does not exist.",
+    "description": "View this page."
   },
   "socialShare": {
     "share": "Share this post:",

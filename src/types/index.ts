@@ -22,19 +22,19 @@ export type AlertMessage = {
 
 export type PostListing = {
   _id: string;
-  title: string;
-  slug: string;
-  publishedAt: string;
-  image?: SanityImageSource;
+  title: string | null;
+  slug: string | null;
+  publishedAt: string | null;
+  image?: SanityImageSource | null;
   category?: {
-    title: string;
-    slug: string;
-  };
+    title: string | null;
+    slug: string | null;
+  } | null;
   tags?: Array<{
-    title: string;
-    slug: string;
-  }>;
-  excerpt?: string;
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  excerpt?: string | null;
 };
 
 export type FeedPost = {

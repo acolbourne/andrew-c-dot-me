@@ -8,7 +8,6 @@ import { PAGE_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { GeneratedPageProps, SinglePage } from '@/types';
 
-// Cache the fetch function to deduplicate requests within the same render pass
 const fetchPageData = cache(
   async (pageSlug: string): Promise<SinglePage | null> => client.fetch(PAGE_QUERY, { pageSlug })
 );
@@ -55,7 +54,6 @@ const GeneratedPage = async ({ params }: GeneratedPageProps) => {
     notFound();
   }
 
-  // Fetch page data once and pass it down
   const pageData = await fetchPageData(pageSlug);
 
   if (!pageData) {
