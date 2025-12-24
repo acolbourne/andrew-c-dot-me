@@ -1,5 +1,5 @@
 ✔ Set up next-intl and move text over to language keys. @done (12/17/2025, 4:32:01 PM)
-☐ There is a basic, working mobile menu, but I'm not really sure about the design. Rethink it.
+✔ There is a basic, working mobile menu, but I'm not really sure about the design. Rethink it. @done (12/24/2025, 11:11:48 AM)
 ✔ Add anti-spam features to the contact form, including a CAPTCHA. @done (12/21/2025, 1:56:37 PM)
 ☐ I've added a temporary favicon (from the old version of the site) to the metadata. Replace this with a new one.
 ✔ Some of the category pages have been put together a little roughly/quickly to get them working. Refactor and improve them. @done (12/23/2025, 2:19:04 PM)

@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: GeneratedPageProps) {
 }
 
 const PageContent = ({ pageData }: { pageData: SinglePage }) => (
-  <section>
+  <section id="page-content">
     <h1 className="mb-8 font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-white">
       {pageData.title}
     </h1>
