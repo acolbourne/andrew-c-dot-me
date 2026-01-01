@@ -5,6 +5,7 @@ import type { ExtraMetadata } from '@/types';
 import { interFont } from './typography';
 
 import '@/cssfiles/globals.css';
+import { ViewTransition } from 'react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 
@@ -39,7 +40,9 @@ export default async function RootLayout({
         <Providers locale={defaultLocale} messages={messages}>
           <div id="main-container">
             <Header />
-            <main>{children}</main>
+            <ViewTransition>
+              <main>{children}</main>
+            </ViewTransition>
             <Footer />
           </div>
         </Providers>
