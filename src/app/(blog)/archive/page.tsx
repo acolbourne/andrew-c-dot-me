@@ -6,13 +6,7 @@ import PostListingSkeleton from '@/components/Skeleton';
 import { seoMetadata } from '@/lib/metadata';
 import { ARCHIVE_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
-import type { PostListing } from '@/types';
-
-type ArchivePageProps = {
-  searchParams: Promise<{
-    page?: string;
-  }>;
-};
+import type { ArchivePageProps, PostListing } from '@/types';
 
 const POSTS_PER_PAGE = 10;
 

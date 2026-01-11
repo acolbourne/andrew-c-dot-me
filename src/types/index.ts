@@ -50,6 +50,12 @@ export type FeedPost = {
 export type PostSlugs = Pick<PostListing, 'slug' | 'publishedAt'>;
 export type BlogPostListingProps = Omit<PostListing, '_id'>;
 
+export type ArchivePageProps = {
+  searchParams: Promise<{
+    page?: string;
+  }>;
+};
+
 export type CategoryPageProps = {
   params: Promise<{
     category?: string[];
