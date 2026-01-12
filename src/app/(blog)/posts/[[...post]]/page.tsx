@@ -100,7 +100,7 @@ const PostBody = ({ body }: { body: NonNullable<SINGLE_POST_QUERYResult>['body']
   }
 
   return (
-    <div className="prose prose-lg prose-slate dark:prose-invert max-w-none dark:prose-a:text-slate-300 dark:prose-blockquote:text-slate-300 dark:prose-code:text-slate-300 dark:prose-em:text-slate-300 dark:prose-li:text-slate-300 dark:prose-p:text-slate-300 dark:prose-strong:text-slate-200">
+    <div className="prose prose-lg prose-slate dark:prose-invert max-w-none dark:prose-a:text-accent-dark dark:prose-blockquote:text-slate-300 dark:prose-code:text-slate-300 dark:prose-em:text-slate-300 dark:prose-li:text-slate-300 dark:prose-p:text-slate-300 dark:prose-strong:text-slate-200 dark:prose-a:hover:text-accent-dark/90">
       <PortableText value={body} />
     </div>
   );

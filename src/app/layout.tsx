@@ -1,10 +1,11 @@
 import Providers from '@/components/Providers';
-import { defaultLocale, domain, websiteSettings } from '@/constants';
+import { domain, websiteSettings } from '@/constants';
 import { seoMetadata } from '@/lib/metadata';
 import type { ExtraMetadata } from '@/types';
 import { interFont } from './typography';
 
 import '@/cssfiles/globals.css';
+import { getLocale, getMessages } from 'next-intl/server';
 import { ViewTransition } from 'react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
@@ -32,12 +33,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const messages = (await import(`@/language/${defaultLocale}.json`)).default;
-
+  const messages = await getMessages();
+  const currentLocale = await getLocale();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${interFont.className} antialiased`}>
-        <Providers locale={defaultLocale} messages={messages}>
+        <Providers locale={currentLocale} messages={messages}>
           <div id="main-container">
             <Header />
             <ViewTransition>

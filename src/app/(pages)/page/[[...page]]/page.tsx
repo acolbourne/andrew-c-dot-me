@@ -39,7 +39,7 @@ const PageContent = ({ pageData }: { pageData: SinglePage }) => (
     </h1>
 
     {pageData.content ? (
-      <div className="prose prose-slate dark:prose-invert max-w-none text-slate-700 leading-relaxed dark:prose-headings:text-white dark:prose-li:text-slate-200 dark:prose-strong:text-slate-100 dark:text-slate-200">
+      <div className="prose prose-slate dark:prose-invert max-w-none text-slate-700 leading-relaxed dark:prose-a:text-accent-dark dark:prose-headings:text-white dark:prose-li:text-slate-200 dark:prose-strong:text-slate-100 dark:text-slate-200 dark:prose-a:hover:text-accent-dark/90">
         <PortableText value={pageData.content} />
       </div>
     ) : null}

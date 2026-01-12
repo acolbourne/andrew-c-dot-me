@@ -80,3 +80,7 @@ header .mode-toggle {
 #page-content li {
   @apply marker:text-slate-400;
 }
+
+.skeleton {
+  @apply bg-slate-200 dark:bg-slate-900/60;
+}
