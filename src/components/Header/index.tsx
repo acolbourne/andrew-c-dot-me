@@ -2,11 +2,11 @@ import Link from 'next/link';
 import { navItems, websiteSettings } from '@/constants';
 import { PAGES_NAV_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
-import type { NavItems, SinglePage } from '@/types';
+import type { NavItems } from '@/types';
 import Navigation from '../Navigation';
 
 const Header = async () => {
-  let pages: SinglePage[] = [];
+  let pages: NavPage[] = [];
   try {
     pages = await client.fetch(PAGES_NAV_QUERY);
   } catch (error) {

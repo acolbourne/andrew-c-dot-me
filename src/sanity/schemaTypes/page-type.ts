@@ -28,6 +28,13 @@ export const pageType = defineType({
       of: [{ type: 'block' }],
       validation: (rule) =>
         rule.required().min(20).warning('A page must have at least 20 characters.')
+    }),
+    defineField({
+      name: 'hideFromNav',
+      title: 'Hide from Navigation',
+      type: 'boolean',
+      initialValue: false,
+      description: 'If true, this page will not be shown in the navigation menu.'
     })
   ]
 });

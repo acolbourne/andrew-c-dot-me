@@ -116,6 +116,11 @@ export type SinglePage = {
   content: NonNullable<Page['content']>;
 };
 
+export type NavPage = {
+  title: string;
+  slug: string;
+};
+
 export type SocialShareProps = {
   title: string;
   url: string;

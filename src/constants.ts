@@ -24,6 +24,7 @@ export const footerNavItems: NavItems = {
     name: 'GitHub',
     target: '_blank'
   },
+  privacy: { url: '/page/privacy', name: 'Privacy' },
   rss: { url: '/rss.xml', name: 'RSS' }
 };
 

@@ -164,7 +164,7 @@ export const PAGE_SLUGS_QUERY = defineQuery(`
 `);
 
 export const PAGES_NAV_QUERY = defineQuery(`
-  *[_type == "page" && defined(slug.current)] | order(title asc) {
+  *[_type == "page" && defined(slug.current) && !(hideFromNav == true)] | order(title asc) {
     title,
     "slug": slug.current
   }
