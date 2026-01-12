@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { navItems, websiteSettings } from '@/constants';
 import { PAGES_NAV_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
-import type { NavItems } from '@/types';
+import type { NavItems, NavPage } from '@/types';
 import Navigation from '../Navigation';
 
 const Header = async () => {
