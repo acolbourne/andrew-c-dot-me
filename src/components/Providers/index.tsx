@@ -4,6 +4,7 @@ import HolyLoader from 'holy-loader';
 import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider, useTheme } from 'next-themes';
 import type { JSX } from 'react';
+import { FaviconLinks } from '@/components/FaviconLinks';
 
 type ProviderProps = {
   children: React.ReactNode;
@@ -44,6 +45,7 @@ export default function Providers({ children, locale, messages }: ProviderProps)
       enableSystem={false}
     >
       <NextIntlClientProvider locale={locale} messages={messages}>
+        <FaviconLinks />
         <ThemedHolyLoader />
         {children}
       </NextIntlClientProvider>

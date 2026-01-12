@@ -13,11 +13,6 @@ import Header from '@/components/Header';
 export const metadata: ExtraMetadata = seoMetadata({
   title: websiteSettings.title,
   description: websiteSettings.description,
-  icons: {
-    icon: websiteSettings.favicon ?? null,
-    shortcut: websiteSettings.favicon ?? null,
-    apple: websiteSettings.favicon ?? null
-  },
   alternates: {
     types: {
       'application/atom+xml': `${domain}/atom.xml`,

@@ -1,5 +1,10 @@
+import { iconPaths } from '@/constants/icons';
 import type { NavItems, WebsiteConfig } from '@/types';
 import { env } from './env';
+
+export const domain: string =
+  env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://andrew-c.me';
+export const defaultLocale: string = 'en-GB';
 
 export const websiteSettings: WebsiteConfig = {
   name: 'Andrew Colbourne',
@@ -7,9 +12,9 @@ export const websiteSettings: WebsiteConfig = {
   title: 'Blog',
   description: 'My personal blog.',
   keywords: 'blog, personal, programming, tech',
-  favicon: '/images/logo.png',
-  domain: env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://andrew-c.me',
-  defaultLocale: 'en-GB'
+  ...iconPaths,
+  domain,
+  defaultLocale
 } as const;
 
 export const navItems: NavItems = {
@@ -27,6 +32,3 @@ export const footerNavItems: NavItems = {
   privacy: { url: '/page/privacy', name: 'Privacy' },
   rss: { url: '/rss.xml', name: 'RSS' }
 };
-
-export const domain: string = websiteSettings.domain;
-export const defaultLocale: string = websiteSettings.defaultLocale;
