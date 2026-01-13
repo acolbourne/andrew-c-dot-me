@@ -1,11 +1,12 @@
 import type { MetadataRoute } from 'next';
 import { domain } from '@/constants';
-import { POST_SLUGS_QUERY } from '@/sanity/groq/queries';
+import { PAGE_SLUGS_QUERY, POST_SLUGS_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { PostSlugs } from '@/types';
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await client.fetch<PostSlugs[]>(POST_SLUGS_QUERY);
+  const pages = await client.fetch<Array<{ slug: string }>>(PAGE_SLUGS_QUERY);
 
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -47,5 +48,12 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7
   }));
 
-  return [...staticPages, ...blogPosts];
+  const generatedPages: MetadataRoute.Sitemap = pages.map((page) => ({
+    url: `${domain}/page/${page.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.6
+  }));
+
+  return [...staticPages, ...blogPosts, ...generatedPages];
 }
