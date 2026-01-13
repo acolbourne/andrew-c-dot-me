@@ -5,8 +5,10 @@ import { client } from '@/sanity/lib/client';
 import type { PostSlugs } from '@/types';
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await client.fetch<PostSlugs[]>(POST_SLUGS_QUERY);
-  const pages = await client.fetch<Array<{ slug: string }>>(PAGE_SLUGS_QUERY);
+  const [posts, pages] = await Promise.all([
+    client.fetch<PostSlugs[]>(POST_SLUGS_QUERY),
+    client.fetch<Array<{ slug: string }>>(PAGE_SLUGS_QUERY)
+  ]);
 
   const staticPages: MetadataRoute.Sitemap = [
     {
