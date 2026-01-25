@@ -25,22 +25,24 @@ const alertVariants = tv({
   }
 });
 
-const { base } = alertVariants();
-
 const Alert: React.FC<AlertMessage> = ({
   icon = null,
   type,
   style = null,
   title = null,
   message
-}) => (
-  <div className={cn(base({ type, style: style ?? undefined }))} role="alert">
-    {icon ? <span>{icon}</span> : null}
-    <div>
-      {title ? <h3 className="font-bold">{title}</h3> : null}
-      <span className={cn(!!title && 'text-xs')}>{message}</span>
+}) => {
+  const { base } = alertVariants({ type, style: style ?? undefined });
+
+  return (
+    <div className={cn(base())} role="alert">
+      {icon ? <span>{icon}</span> : null}
+      <div>
+        {title ? <h3 className="font-bold">{title}</h3> : null}
+        <span className={cn(!!title && 'text-xs')}>{message}</span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Alert;

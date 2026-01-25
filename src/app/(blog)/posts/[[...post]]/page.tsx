@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { PortableText } from 'next-sanity';
 import { Suspense } from 'react';
+import { tv } from 'tailwind-variants';
 import SinglePostSkeleton from '@/components/Skeleton/single';
 import SocialShare from '@/components/SocialShare';
 import { seoMetadata } from '@/lib/metadata';
@@ -15,6 +16,60 @@ import type {
   ADJACENT_POSTS_QUERYResult,
   SINGLE_POST_QUERYResult
 } from '../../../../../sanity.types';
+
+const postPageVariants = tv({
+  slots: {
+    postHeaderContainer: 'mb-10 flex flex-col gap-6',
+    postHeaderInner: 'space-y-4',
+    postHeaderSlugContainer: 'flex items-center gap-4 text-sm',
+    postHeaderSlugLink:
+      'font-bold text-accent-light uppercase tracking-wider transition-colors hover:opacity-80 dark:text-accent-dark',
+    postHeaderSlugSeparator: 'h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600',
+    postHeaderTime: 'text-slate-500 dark:text-slate-400',
+    postHeaderTitle:
+      'font-extrabold text-3xl text-slate-900 leading-tight tracking-tight sm:text-5xl dark:text-white',
+    postBody:
+      'prose prose-lg prose-slate dark:prose-invert max-w-none dark:prose-a:text-accent-dark dark:prose-blockquote:text-slate-300 dark:prose-code:text-slate-300 dark:prose-em:text-slate-300 dark:prose-li:text-slate-300 dark:prose-p:text-slate-300 dark:prose-strong:text-slate-200 dark:prose-a:hover:text-accent-dark/90',
+    postTagsContainer: 'mt-12 border-slate-200 border-t pt-8 dark:border-slate-800',
+    postTagsList: 'flex flex-wrap gap-2 font-semibold text-xs',
+    postTagLink:
+      'rounded bg-slate-100 px-3 py-1.5 text-slate-700 transition-colors hover:bg-accent-light hover:text-white dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-accent-dark dark:hover:text-slate-900',
+    adjacentPostsNav: 'mt-12 flex justify-between gap-4',
+    adjacentPostsNavLinkPrevious: 'group flex flex-col text-left text-sm',
+    adjacentPostsNavLinkNext: 'group flex flex-col text-right text-sm',
+    adjacentPostsArrow:
+      'mb-1 text-slate-500 transition-colors group-hover:text-accent-light dark:text-slate-500 dark:group-hover:text-accent-dark',
+    adjacentPostsTitle: 'font-bold text-slate-900 dark:text-white',
+    postImageContainer: 'mb-10 overflow-hidden rounded-xl shadow-sm',
+    postImage: 'h-auto w-full object-cover',
+    backToBlogLinkContainer: 'mb-8',
+    backToBlogLink:
+      'inline-flex items-center font-semibold text-slate-500 text-sm transition-colors hover:text-accent-light dark:text-slate-400 dark:hover:text-accent-dark'
+  }
+});
+
+const {
+  postBody,
+  postTagsContainer,
+  postTagsList,
+  postTagLink,
+  adjacentPostsNav,
+  adjacentPostsNavLinkPrevious,
+  adjacentPostsNavLinkNext,
+  adjacentPostsArrow,
+  adjacentPostsTitle,
+  postImageContainer,
+  postImage,
+  postHeaderContainer,
+  postHeaderInner,
+  postHeaderSlugContainer,
+  postHeaderSlugLink,
+  postHeaderSlugSeparator,
+  postHeaderTime,
+  postHeaderTitle,
+  backToBlogLinkContainer,
+  backToBlogLink
+} = postPageVariants();
 
 const formatDate = (dateString: string | null | undefined): string => {
   if (!dateString) {
@@ -42,27 +97,22 @@ const PostHeader = ({
   const formattedDate = formatDate(publishedAt);
 
   return (
-    <header className="mb-10 flex flex-col gap-6">
-      <div className="space-y-4">
-        <div className="flex items-center gap-4 text-sm">
+    <header className={postHeaderContainer()}>
+      <div className={postHeaderInner()}>
+        <div className={postHeaderSlugContainer()}>
           {category?.slug ? (
             <>
-              <Link
-                className="font-bold text-accent-light uppercase tracking-wider transition-colors hover:opacity-80 dark:text-accent-dark"
-                href={`/categories/${category.slug}`}
-              >
+              <Link className={postHeaderSlugLink()} href={`/categories/${category.slug}`}>
                 {category.title}
               </Link>
-              <span className="h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600" />
+              <span className={postHeaderSlugSeparator()} />
             </>
           ) : null}
-          <time className="text-slate-500 dark:text-slate-400" dateTime={publishedAt || ''}>
+          <time className={postHeaderTime()} dateTime={publishedAt || ''}>
             {formattedDate}
           </time>
         </div>
-        <h1 className="font-extrabold text-3xl text-slate-900 leading-tight tracking-tight sm:text-5xl dark:text-white">
-          {title}
-        </h1>
+        <h1 className={postHeaderTitle()}>{title}</h1>
       </div>
     </header>
   );
@@ -82,14 +132,8 @@ const PostImage = ({
   const imageUrl = getImageUrl(image);
 
   return (
-    <div className="mb-10 overflow-hidden rounded-xl shadow-sm">
-      <Image
-        alt={title || ''}
-        className="h-auto w-full object-cover"
-        height={600}
-        src={imageUrl}
-        width={1200}
-      />
+    <div className={postImageContainer()}>
+      <Image alt={title || ''} className={postImage()} height={600} src={imageUrl} width={1200} />
     </div>
   );
 };
@@ -100,7 +144,7 @@ const PostBody = ({ body }: { body: NonNullable<SINGLE_POST_QUERYResult>['body']
   }
 
   return (
-    <div className="prose prose-lg prose-slate dark:prose-invert max-w-none dark:prose-a:text-accent-dark dark:prose-blockquote:text-slate-300 dark:prose-code:text-slate-300 dark:prose-em:text-slate-300 dark:prose-li:text-slate-300 dark:prose-p:text-slate-300 dark:prose-strong:text-slate-200 dark:prose-a:hover:text-accent-dark/90">
+    <div className={postBody()}>
       <PortableText value={body} />
     </div>
   );
@@ -112,14 +156,10 @@ const PostTags = ({ tags }: { tags: NonNullable<SINGLE_POST_QUERYResult>['tags']
   }
 
   return (
-    <div className="mt-12 border-slate-200 border-t pt-8 dark:border-slate-800">
-      <div className="flex flex-wrap gap-2 font-semibold text-xs">
+    <div className={postTagsContainer()}>
+      <div className={postTagsList()}>
         {tags.map((tag: { title: string | null; slug: string | null }) => (
-          <Link
-            className="rounded bg-slate-100 px-3 py-1.5 text-slate-700 transition-colors hover:bg-accent-light hover:text-white dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-accent-dark dark:hover:text-slate-900"
-            href={`/tags/${tag.slug}`}
-            key={tag.slug}
-          >
+          <Link className={postTagLink()} href={`/tags/${tag.slug}`} key={tag.slug}>
             #{tag.title}
           </Link>
         ))}
@@ -140,33 +180,22 @@ const AdjacentPostsNav = ({
   }
 
   return (
-    <nav className="mt-12 flex justify-between gap-4">
+    <nav className={adjacentPostsNav()}>
       {adjacentPosts?.previous ? (
         <Link
-          className="group flex flex-col text-left text-sm"
+          className={adjacentPostsNavLinkPrevious()}
           href={`/posts/${adjacentPosts.previous.slug}`}
         >
-          <span className="mb-1 text-slate-500 transition-colors group-hover:text-accent-light dark:text-slate-500 dark:group-hover:text-accent-dark">
-            &larr; {t('previousPost')}
-          </span>
-          <span className="font-bold text-slate-900 dark:text-white">
-            {adjacentPosts.previous.title}
-          </span>
+          <span className={adjacentPostsArrow()}>&larr; {t('previousPost')}</span>
+          <span className={adjacentPostsTitle()}>{adjacentPosts.previous.title}</span>
         </Link>
       ) : (
         <div />
       )}
       {adjacentPosts?.next ? (
-        <Link
-          className="group flex flex-col text-right text-sm"
-          href={`/posts/${adjacentPosts.next.slug}`}
-        >
-          <span className="mb-1 text-slate-500 transition-colors group-hover:text-accent-light dark:text-slate-500 dark:group-hover:text-accent-dark">
-            {t('nextPost')} &rarr;
-          </span>
-          <span className="font-bold text-slate-900 dark:text-white">
-            {adjacentPosts.next.title}
-          </span>
+        <Link className={adjacentPostsNavLinkNext()} href={`/posts/${adjacentPosts.next.slug}`}>
+          <span className={adjacentPostsArrow()}>{t('nextPost')} &rarr;</span>
+          <span className={adjacentPostsTitle()}>{adjacentPosts.next.title}</span>
         </Link>
       ) : null}
     </nav>
@@ -212,11 +241,8 @@ const PostContent = async ({ postSlug }: { postSlug: string }) => {
 
   return (
     <>
-      <div className="mb-8">
-        <Link
-          className="inline-flex items-center font-semibold text-slate-500 text-sm transition-colors hover:text-accent-light dark:text-slate-400 dark:hover:text-accent-dark"
-          href="/"
-        >
+      <div className={backToBlogLinkContainer()}>
+        <Link className={backToBlogLink()} href="/">
           &larr; {t('backToBlog')}
         </Link>
       </div>

@@ -2,11 +2,23 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { PortableText } from 'next-sanity';
 import { cache, Suspense } from 'react';
+import { tv } from 'tailwind-variants';
 import SinglePostSkeleton from '@/components/Skeleton/single';
 import { seoMetadata } from '@/lib/metadata';
 import { PAGE_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { GeneratedPageProps, SinglePage } from '@/types';
+
+const pageContentVariants = tv({
+  slots: {
+    pageTitle:
+      'mb-8 font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-white',
+    pageContent:
+      'prose prose-slate dark:prose-invert max-w-none text-slate-700 leading-relaxed dark:prose-a:text-accent-dark dark:prose-headings:text-white dark:prose-li:text-slate-200 dark:prose-strong:text-slate-100 dark:text-slate-200 dark:prose-a:hover:text-accent-dark/90'
+  }
+});
+
+const { pageTitle, pageContent } = pageContentVariants();
 
 const fetchPageData = cache(
   async (pageSlug: string): Promise<SinglePage | null> => client.fetch(PAGE_QUERY, { pageSlug })
@@ -34,12 +46,10 @@ export async function generateMetadata({ params }: GeneratedPageProps) {
 
 const PageContent = ({ pageData }: { pageData: SinglePage }) => (
   <section id="page-content">
-    <h1 className="mb-8 font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-white">
-      {pageData.title}
-    </h1>
+    <h1 className={pageTitle()}>{pageData.title}</h1>
 
     {pageData.content ? (
-      <div className="prose prose-slate dark:prose-invert max-w-none text-slate-700 leading-relaxed dark:prose-a:text-accent-dark dark:prose-headings:text-white dark:prose-li:text-slate-200 dark:prose-strong:text-slate-100 dark:text-slate-200 dark:prose-a:hover:text-accent-dark/90">
+      <div className={pageContent()}>
         <PortableText value={pageData.content} />
       </div>
     ) : null}

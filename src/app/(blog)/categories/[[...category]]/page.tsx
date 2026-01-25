@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
+import { tv } from 'tailwind-variants';
 import BlogPostListing from '@/components/BlogPostListing';
 import Pagination from '@/components/Pagination';
 import PostListingSkeleton from '@/components/Skeleton';
@@ -8,6 +9,33 @@ import { seoMetadata } from '@/lib/metadata';
 import { CATEGORY_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { CategoryPageProps, PostListing } from '@/types';
+
+const categoryPageVariants = tv({
+  slots: {
+    categorySection: 'mb-16 border-slate-200 border-b pb-10 dark:border-slate-800',
+    categorySectionInner: 'mb-2',
+    categorySectionBrowsing:
+      'font-bold text-slate-500 text-xs uppercase tracking-wider dark:text-slate-500',
+    categorySectionTitleContainer: 'flex flex-col sm:flex-row sm:items-baseline sm:justify-between',
+    categorySectionTitle:
+      'font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-white',
+    categorySectionNumberOfPosts:
+      'mt-2 font-medium text-slate-500 text-sm sm:mt-0 dark:text-slate-400',
+    categorySectionDescription: 'mt-4 max-w-xl text-lg text-slate-700 dark:text-slate-300',
+    postsListContainer: 'space-y-20'
+  }
+});
+
+const {
+  categorySection,
+  categorySectionInner,
+  categorySectionBrowsing,
+  categorySectionTitleContainer,
+  categorySectionTitle,
+  categorySectionNumberOfPosts,
+  categorySectionDescription,
+  postsListContainer
+} = categoryPageVariants();
 
 const POSTS_PER_PAGE = 10;
 
@@ -112,29 +140,23 @@ const SingleCategoryPage = async ({ params, searchParams }: CategoryPageProps) =
 
   return (
     <>
-      <section className="mb-16 border-slate-200 border-b pb-10 dark:border-slate-800">
-        <div className="mb-2">
-          <span className="font-bold text-slate-500 text-xs uppercase tracking-wider dark:text-slate-500">
-            {t('browsingCategory')}
-          </span>
+      <section className={categorySection()}>
+        <div className={categorySectionInner()}>
+          <span className={categorySectionBrowsing()}>{t('browsingCategory')}</span>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
-          <h1 className="font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-white">
-            {categoryData.title}
-          </h1>
-          <span className="mt-2 font-medium text-slate-500 text-sm sm:mt-0 dark:text-slate-400">
+        <div className={categorySectionTitleContainer()}>
+          <h1 className={categorySectionTitle()}>{categoryData.title}</h1>
+          <span className={categorySectionNumberOfPosts()}>
             {t('numberOfPosts', { count: categoryData.postCount })}
           </span>
         </div>
         {categoryData.description ? (
-          <p className="mt-4 max-w-xl text-lg text-slate-700 dark:text-slate-300">
-            {categoryData.description}
-          </p>
+          <p className={categorySectionDescription()}>{categoryData.description}</p>
         ) : null}
       </section>
 
       <section>
-        <div className="space-y-20">
+        <div className={postsListContainer()}>
           <Suspense fallback={<SkeletonFallback />}>
             <PostsList categorySlug={categorySlug} end={end} start={start} />
           </Suspense>

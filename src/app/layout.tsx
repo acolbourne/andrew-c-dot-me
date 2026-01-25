@@ -31,7 +31,7 @@ export default async function RootLayout({
   const messages = await getMessages();
   const currentLocale = await getLocale();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={currentLocale} suppressHydrationWarning>
       <body className={`${interFont.className} antialiased`}>
         <Providers locale={currentLocale} messages={messages}>
           <div id="main-container">

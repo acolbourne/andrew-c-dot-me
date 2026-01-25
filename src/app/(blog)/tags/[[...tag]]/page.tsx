@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
+import { tv } from 'tailwind-variants';
 import BlogPostListing from '@/components/BlogPostListing';
 import Pagination from '@/components/Pagination';
 import PostListingSkeleton from '@/components/Skeleton';
@@ -8,6 +9,30 @@ import { seoMetadata } from '@/lib/metadata';
 import { TAG_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { PostListing, TagPageProps } from '@/types';
+
+const tagPageVariants = tv({
+  slots: {
+    base: 'mb-16 border-slate-200 border-b pb-10 dark:border-slate-800',
+    browsingTagContainer: 'mb-2',
+    browsingTag: 'font-bold text-slate-500 text-xs uppercase tracking-wider',
+    titleContainer: 'flex flex-col sm:flex-row sm:items-baseline sm:justify-between',
+    title: 'font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-white',
+    numberOfPosts: 'mt-2 font-medium text-slate-500 text-sm sm:mt-0 dark:text-slate-400',
+    description: 'mt-4 max-w-xl text-lg text-slate-700 dark:text-slate-300',
+    postsListContainer: 'space-y-20'
+  }
+});
+
+const {
+  base,
+  browsingTagContainer,
+  browsingTag,
+  titleContainer,
+  title,
+  numberOfPosts,
+  description,
+  postsListContainer
+} = tagPageVariants();
 
 const POSTS_PER_PAGE = 10;
 
@@ -112,29 +137,21 @@ const SingleTagPage = async ({ params, searchParams }: TagPageProps) => {
 
   return (
     <>
-      <section className="mb-16 border-slate-200 border-b pb-10 dark:border-slate-800">
-        <div className="mb-2">
-          <span className="font-bold text-slate-500 text-xs uppercase tracking-wider dark:text-slate-500">
-            {t('browsingTag')}
-          </span>
+      <section className={base()}>
+        <div className={browsingTagContainer()}>
+          <span className={browsingTag()}>{t('browsingTag')}</span>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
-          <h1 className="font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-white">
-            {tagData.title}
-          </h1>
-          <span className="mt-2 font-medium text-slate-500 text-sm sm:mt-0 dark:text-slate-400">
+        <div className={titleContainer()}>
+          <h1 className={title()}>{tagData.title}</h1>
+          <span className={numberOfPosts()}>
             {t('numberOfPosts', { count: tagData.postCount })}
           </span>
         </div>
-        {tagData.description ? (
-          <p className="mt-4 max-w-xl text-lg text-slate-700 dark:text-slate-300">
-            {tagData.description}
-          </p>
-        ) : null}
+        {tagData.description ? <p className={description()}>{tagData.description}</p> : null}
       </section>
 
       <section>
-        <div className="space-y-20">
+        <div className={postsListContainer()}>
           <Suspense fallback={<SkeletonFallback />}>
             <PostsList end={end} start={start} tagSlug={tagSlug} />
           </Suspense>

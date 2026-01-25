@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
+import { tv } from 'tailwind-variants';
 import BlogPostListing from '@/components/BlogPostListing';
 import HeroSection from '@/components/HeroSection/page';
 import Pagination from '@/components/Pagination';
@@ -15,6 +16,17 @@ interface HomepageProps {
   }>;
 }
 
+const homepageVariants = tv({
+  slots: {
+    latestArticles:
+      'mb-8 flex items-end justify-between border-slate-200 border-b pb-2 dark:border-slate-800',
+    latestArticlesTitle:
+      'font-bold text-slate-600 text-sm uppercase tracking-wider dark:text-slate-400',
+    viewArchiveLink: 'font-medium text-accent-light text-xs hover:underline dark:text-accent-dark'
+  }
+});
+
+const { latestArticles, latestArticlesTitle, viewArchiveLink } = homepageVariants();
 const POSTS_PER_PAGE = 5;
 
 const PostsList = async ({ start, end }: { start: number; end: number }) => {
@@ -75,14 +87,9 @@ const Homepage = async ({ searchParams }: HomepageProps) => {
       <HeroSection />
 
       <section>
-        <div className="mb-8 flex items-end justify-between border-slate-200 border-b pb-2 dark:border-slate-800">
-          <h2 className="font-bold text-slate-600 text-sm uppercase tracking-wider dark:text-slate-400">
-            {t('latestArticles')}
-          </h2>
-          <Link
-            className="font-medium text-accent-light text-xs hover:underline dark:text-accent-dark"
-            href="/archive"
-          >
+        <div className={latestArticles()}>
+          <h2 className={latestArticlesTitle()}>{t('latestArticles')}</h2>
+          <Link className={viewArchiveLink()} href="/archive">
             {t('viewArchive')}
           </Link>
         </div>
