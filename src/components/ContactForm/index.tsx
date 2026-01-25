@@ -6,6 +6,7 @@ import { CircleCheckBig, CircleX, LoaderCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { tv } from 'tailwind-variants';
 import type { z } from 'zod';
 import { env } from '@/env';
 import { tryCatch } from '@/lib/try-catch';
@@ -15,6 +16,33 @@ import Alert from '../Alert';
 import { Button } from '../ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
+
+const contactFormVariants = tv({
+  slots: {
+    form: 'flex flex-col gap-5',
+    formItem: 'form-control w-full',
+    formLabelOuter: 'label pt-0 pb-1',
+    formLabelInner: 'label-text font-bold text-slate-700 dark:text-slate-300',
+    formInput:
+      'input input-bordered w-full rounded-lg border-slate-300 bg-slate-50 text-slate-900 transition-all focus:border-accent-light focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-accent-dark',
+    formTextarea:
+      'textarea textarea-bordered h-40 w-full rounded-lg border-slate-300 bg-slate-50 text-base text-slate-900 transition-all focus:border-accent-light focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-accent-dark',
+    formError: 'mb-2 text-red-500 text-sm',
+    submitButton:
+      'btn btn-block mt-6 h-12 rounded-lg border-none bg-accent-light font-bold text-base text-white normal-case hover:bg-blue-700 dark:bg-accent-dark dark:text-slate-900 dark:hover:bg-blue-400'
+  }
+});
+
+const {
+  form,
+  formItem,
+  formLabelOuter,
+  formLabelInner,
+  formInput,
+  formTextarea,
+  formError,
+  submitButton
+} = contactFormVariants();
 
 export const ContactForm: React.FC = () => {
   const t = useTranslations('contactForm');
@@ -108,7 +136,7 @@ export const ContactForm: React.FC = () => {
       {formResult?.error !== null && <Alert icon={<CircleX />} message={t('error')} type="error" />}
 
       <Form {...theContactForm}>
-        <form className="flex flex-col gap-5" onSubmit={theContactForm.handleSubmit(submitHandler)}>
+        <form className={form()} onSubmit={theContactForm.handleSubmit(submitHandler)}>
           <p hidden>
             <input name="bot-zapper" onChange={() => setDisableSubmit(true)} type="text" value="" />
           </p>
@@ -117,15 +145,13 @@ export const ContactForm: React.FC = () => {
             control={theContactForm.control}
             name="name"
             render={({ field }) => (
-              <FormItem className="form-control w-full">
-                <FormLabel className="label pt-0 pb-1" htmlFor="name">
-                  <span className="label-text font-bold text-slate-700 dark:text-slate-300">
-                    {t('name')}
-                  </span>
+              <FormItem className={formItem()}>
+                <FormLabel className={formLabelOuter()} htmlFor="name">
+                  <span className={formLabelInner()}>{t('name')}</span>
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="input input-bordered w-full rounded-lg border-slate-300 bg-slate-50 text-slate-900 transition-all focus:border-accent-light focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-accent-dark"
+                    className={formInput()}
                     id="name"
                     placeholder={t('namePlaceholder')}
                     type="text"
@@ -133,7 +159,7 @@ export const ContactForm: React.FC = () => {
                   />
                 </FormControl>
                 {!!theContactForm.formState.errors.name && (
-                  <FormDescription className="mb-2 text-red-500 text-sm">
+                  <FormDescription className={formError()}>
                     {theContactForm.formState.errors.name.message}
                   </FormDescription>
                 )}
@@ -145,15 +171,13 @@ export const ContactForm: React.FC = () => {
             control={theContactForm.control}
             name="email"
             render={({ field }) => (
-              <FormItem className="form-control w-full">
-                <FormLabel className="label pt-0 pb-1" htmlFor="email">
-                  <span className="label-text font-bold text-slate-700 dark:text-slate-300">
-                    {t('email')}
-                  </span>
+              <FormItem className={formItem()}>
+                <FormLabel className={formLabelOuter()} htmlFor="email">
+                  <span className={formLabelInner()}>{t('email')}</span>
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="input input-bordered w-full rounded-lg border-slate-300 bg-slate-50 text-slate-900 transition-all focus:border-accent-light focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-accent-dark"
+                    className={formInput()}
                     id="email"
                     placeholder={t('emailPlaceholder')}
                     type="email"
@@ -161,7 +185,7 @@ export const ContactForm: React.FC = () => {
                   />
                 </FormControl>
                 {!!theContactForm.formState.errors.email && (
-                  <FormDescription className="mb-2 text-red-500 text-sm">
+                  <FormDescription className={formError()}>
                     {theContactForm.formState.errors.email.message}
                   </FormDescription>
                 )}
@@ -173,22 +197,20 @@ export const ContactForm: React.FC = () => {
             control={theContactForm.control}
             name="message"
             render={({ field }) => (
-              <FormItem className="form-control w-full">
-                <FormLabel className="label pt-0 pb-1" htmlFor="message">
-                  <span className="label-text font-bold text-slate-700 dark:text-slate-300">
-                    {t('message')}
-                  </span>
+              <FormItem className={formItem()}>
+                <FormLabel className={formLabelOuter()} htmlFor="message">
+                  <span className={formLabelInner()}>{t('message')}</span>
                 </FormLabel>
                 <FormControl>
                   <textarea
-                    className="textarea textarea-bordered h-40 w-full rounded-lg border-slate-300 bg-slate-50 text-base text-slate-900 transition-all focus:border-accent-light focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-accent-dark"
+                    className={formTextarea()}
                     id="message"
                     placeholder={t('messagePlaceholder')}
                     {...field}
                   />
                 </FormControl>
                 {!!theContactForm.formState.errors.message && (
-                  <FormDescription className="mb-2 text-red-500 text-sm">
+                  <FormDescription className={formError()}>
                     {theContactForm.formState.errors.message.message}
                   </FormDescription>
                 )}
@@ -196,11 +218,7 @@ export const ContactForm: React.FC = () => {
             )}
           />
 
-          <Button
-            className="btn btn-block mt-6 h-12 rounded-lg border-none bg-accent-light font-bold text-base text-white normal-case hover:bg-blue-700 dark:bg-accent-dark dark:text-slate-900 dark:hover:bg-blue-400"
-            disabled={disableSubmit}
-            type="submit"
-          >
+          <Button className={submitButton()} disabled={disableSubmit} type="submit">
             {disableSubmit === false ? t('submit') : <LoaderCircle />}
           </Button>
         </form>

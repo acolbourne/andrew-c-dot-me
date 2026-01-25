@@ -1,9 +1,20 @@
 import Link from 'next/link';
+import { tv } from 'tailwind-variants';
 import { navItems, websiteSettings } from '@/constants';
 import { PAGES_NAV_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { NavItems, NavPage } from '@/types';
 import Navigation from '../Navigation';
+
+const headerVariants = tv({
+  slots: {
+    title:
+      'font-bold text-xl tracking-tight transition-colors hover:text-accent-light dark:hover:text-accent-dark',
+    navigation: 'flex items-center gap-6'
+  }
+});
+
+const { title, navigation } = headerVariants();
 
 const Header = async () => {
   let pages: NavPage[] = [];
@@ -32,14 +43,11 @@ const Header = async () => {
 
   return (
     <header>
-      <Link
-        className="font-bold text-xl tracking-tight transition-colors hover:text-accent-light dark:hover:text-accent-dark"
-        href="/"
-      >
+      <Link className={title()} href="/">
         {websiteSettings.name}
       </Link>
 
-      <div className="flex items-center gap-6">
+      <div className={navigation()}>
         <Navigation items={mergedNavItems} />
       </div>
     </header>

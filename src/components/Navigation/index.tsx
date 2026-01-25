@@ -4,12 +4,25 @@ import { gsap } from 'gsap';
 import { MenuIcon, XIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { tv } from 'tailwind-variants';
 import type { NavItems } from '@/types';
 import { ModeSelect } from '../ModeSelect';
 
 interface NavigationProps {
   items: NavItems;
 }
+
+const navigationVariants = tv({
+  slots: {
+    base: 'flex items-center gap-6',
+    browserNavLink:
+      'transition-colors hover:border-slate-900 hover:underline hover:decoration-2 hover:underline-offset-8',
+    mobileNavLink:
+      'block font-semibold text-lg text-slate-700 transition-colors hover:text-accent-light dark:text-slate-200 dark:hover:text-accent-dark'
+  }
+});
+
+const { base, browserNavLink, mobileNavLink } = navigationVariants();
 
 const Navigation: React.FC<NavigationProps> = ({ items }) => {
   const [mobileMenu, setMobileMenu] = useState<boolean>(false);
@@ -155,11 +168,11 @@ const Navigation: React.FC<NavigationProps> = ({ items }) => {
 
   return (
     <>
-      <div className="flex items-center gap-6">
+      <div className={base()}>
         <nav id="main-nav">
           {Object.values(items).map((item) => (
             <Link
-              className="transition-colors hover:border-slate-900 hover:underline hover:decoration-2 hover:underline-offset-8"
+              className={browserNavLink()}
               href={item.url}
               key={item.url}
               target={item.target ?? '_self'}
@@ -186,7 +199,7 @@ const Navigation: React.FC<NavigationProps> = ({ items }) => {
       <div className="hidden" id="mobile-nav" ref={menuRef}>
         {Object.values(items).map((item, index) => (
           <Link
-            className="block font-semibold text-lg text-slate-700 transition-colors hover:text-accent-light dark:text-slate-200 dark:hover:text-accent-dark"
+            className={mobileNavLink()}
             href={item.url}
             key={item.url}
             ref={(el) => {
