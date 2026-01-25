@@ -9,11 +9,11 @@ import { ARCHIVE_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import type { PostListing } from '@/types';
 
-type HomepageProps = {
+interface HomepageProps {
   searchParams?: Promise<{
     page?: string;
   }>;
-};
+}
 
 const POSTS_PER_PAGE = 5;
 

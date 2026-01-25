@@ -6,11 +6,11 @@ import { ThemeProvider, useTheme } from 'next-themes';
 import type { JSX } from 'react';
 import { FaviconLinks } from '@/components/FaviconLinks';
 
-type ProviderProps = {
+interface ProviderProps {
   children: React.ReactNode;
   locale: string;
   messages: Record<string, unknown>;
-};
+}
 
 const ThemedHolyLoader = (): JSX.Element | null => {
   const { theme, resolvedTheme } = useTheme();

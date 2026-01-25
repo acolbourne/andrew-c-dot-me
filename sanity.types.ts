@@ -13,7 +13,7 @@
  */
 
 // Source: schema.json
-export type Page = {
+export interface Page {
   _id: string;
   _type: 'page';
   _createdAt: string;
@@ -39,15 +39,15 @@ export type Page = {
     _type: 'block';
     _key: string;
   }>;
-};
+}
 
-export type Slug = {
+export interface Slug {
   _type: 'slug';
   current?: string;
   source?: string;
-};
+}
 
-export type Tags = {
+export interface Tags {
   _id: string;
   _type: 'tags';
   _createdAt: string;
@@ -56,9 +56,9 @@ export type Tags = {
   title?: string;
   description?: string;
   slug?: Slug;
-};
+}
 
-export type Post = {
+export interface Post {
   _id: string;
   _type: 'post';
   _createdAt: string;
@@ -110,25 +110,25 @@ export type Post = {
     _key: string;
     [internalGroqTypeReferenceTo]?: 'tags';
   }>;
-};
+}
 
-export type SanityImageCrop = {
+export interface SanityImageCrop {
   _type: 'sanity.imageCrop';
   top?: number;
   bottom?: number;
   left?: number;
   right?: number;
-};
+}
 
-export type SanityImageHotspot = {
+export interface SanityImageHotspot {
   _type: 'sanity.imageHotspot';
   x?: number;
   y?: number;
   height?: number;
   width?: number;
-};
+}
 
-export type Category = {
+export interface Category {
   _id: string;
   _type: 'category';
   _createdAt: string;
@@ -137,17 +137,17 @@ export type Category = {
   title?: string;
   description?: string;
   slug?: Slug;
-};
+}
 
-export type SanityImagePaletteSwatch = {
+export interface SanityImagePaletteSwatch {
   _type: 'sanity.imagePaletteSwatch';
   background?: string;
   foreground?: string;
   population?: number;
   title?: string;
-};
+}
 
-export type SanityImagePalette = {
+export interface SanityImagePalette {
   _type: 'sanity.imagePalette';
   darkMuted?: SanityImagePaletteSwatch;
   lightVibrant?: SanityImagePaletteSwatch;
@@ -156,16 +156,16 @@ export type SanityImagePalette = {
   dominant?: SanityImagePaletteSwatch;
   lightMuted?: SanityImagePaletteSwatch;
   muted?: SanityImagePaletteSwatch;
-};
+}
 
-export type SanityImageDimensions = {
+export interface SanityImageDimensions {
   _type: 'sanity.imageDimensions';
   height?: number;
   width?: number;
   aspectRatio?: number;
-};
+}
 
-export type SanityImageMetadata = {
+export interface SanityImageMetadata {
   _type: 'sanity.imageMetadata';
   location?: Geopoint;
   dimensions?: SanityImageDimensions;
@@ -174,9 +174,9 @@ export type SanityImageMetadata = {
   blurHash?: string;
   hasAlpha?: boolean;
   isOpaque?: boolean;
-};
+}
 
-export type SanityFileAsset = {
+export interface SanityFileAsset {
   _id: string;
   _type: 'sanity.fileAsset';
   _createdAt: string;
@@ -196,16 +196,16 @@ export type SanityFileAsset = {
   path?: string;
   url?: string;
   source?: SanityAssetSourceData;
-};
+}
 
-export type SanityAssetSourceData = {
+export interface SanityAssetSourceData {
   _type: 'sanity.assetSourceData';
   name?: string;
   id?: string;
   url?: string;
-};
+}
 
-export type SanityImageAsset = {
+export interface SanityImageAsset {
   _id: string;
   _type: 'sanity.imageAsset';
   _createdAt: string;
@@ -226,14 +226,14 @@ export type SanityImageAsset = {
   url?: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
-};
+}
 
-export type Geopoint = {
+export interface Geopoint {
   _type: 'geopoint';
   lat?: number;
   lng?: number;
   alt?: number;
-};
+}
 
 export type AllSanitySchemaTypes =
   | Page
@@ -362,7 +362,7 @@ export type TAG_QUERYResult = {
 } | null;
 // Variable: ARCHIVE_QUERY
 // Query: {    "postCount": count(*[_type == "post" && defined(slug.current)]),    "posts": *[_type == "post" && defined(slug.current)] | order(publishedAt desc) [$start...$end] {      _id,      title,      "slug": slug.current,      publishedAt,      image,      "category": {        "title": category->title,        "slug": category->slug.current      },      "tags": tags[]->{        "title": title,        "slug": slug.current      },      "excerpt": pt::text(body)    }  }
-export type ARCHIVE_QUERYResult = {
+export interface ARCHIVE_QUERYResult {
   postCount: number;
   posts: Array<{
     _id: string;
@@ -391,7 +391,7 @@ export type ARCHIVE_QUERYResult = {
     }> | null;
     excerpt: string;
   }>;
-};
+}
 // Variable: SINGLE_POST_QUERY
 // Query: *[_type == "post" && slug.current == $postSlug][0] {    _id,    title,    "slug": slug.current,    publishedAt,    image,    body,    "category": {      "title": category->title,      "slug": category->slug.current    },    "tags": tags[]->{      "title": title,      "slug": slug.current    }  }
 export type SINGLE_POST_QUERYResult = {
@@ -440,7 +440,7 @@ export type SINGLE_POST_QUERYResult = {
 } | null;
 // Variable: ADJACENT_POSTS_QUERY
 // Query: {    "previous": *[_type == "post"       && defined(slug.current)      && publishedAt > $publishedAt    ] | order(publishedAt asc) [0] {      title,      "slug": slug.current    },    "next": *[_type == "post"       && defined(slug.current)      && publishedAt < $publishedAt    ] | order(publishedAt desc) [0] {      title,      "slug": slug.current    }  }
-export type ADJACENT_POSTS_QUERYResult = {
+export interface ADJACENT_POSTS_QUERYResult {
   previous: {
     title: string | null;
     slug: string | null;
@@ -449,7 +449,7 @@ export type ADJACENT_POSTS_QUERYResult = {
     title: string | null;
     slug: string | null;
   } | null;
-};
+}
 
 // Query TypeMap
 import '@sanity/client';

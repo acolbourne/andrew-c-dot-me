@@ -7,9 +7,9 @@ import { useEffect, useRef, useState } from 'react';
 import type { NavItems } from '@/types';
 import { ModeSelect } from '../ModeSelect';
 
-type NavigationProps = {
+interface NavigationProps {
   items: NavItems;
-};
+}
 
 const Navigation: React.FC<NavigationProps> = ({ items }) => {
   const [mobileMenu, setMobileMenu] = useState<boolean>(false);

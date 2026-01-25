@@ -12,15 +12,15 @@ export interface ExtraMetadata extends Metadata {
   urlCanonical?: string;
 }
 
-export type AlertMessage = {
+export interface AlertMessage {
   icon?: React.ReactElement | null;
   type: 'info' | 'success' | 'warning' | 'error';
   style?: 'soft' | 'outline' | 'dash' | null;
   title?: string;
   message: string;
-};
+}
 
-export type PostListing = {
+export interface PostListing {
   _id: string;
   title: string | null;
   slug: string | null;
@@ -35,9 +35,9 @@ export type PostListing = {
     slug: string | null;
   }> | null;
   excerpt?: string | null;
-};
+}
 
-export type FeedPost = {
+export interface FeedPost {
   slug: string;
   title: string;
   publishedAt: string;
@@ -45,54 +45,54 @@ export type FeedPost = {
   image: { asset?: { _ref: string } } | null;
   category: { title: string; slug: string } | null;
   tags: Array<{ title: string | null; slug: string | null }> | null;
-};
+}
 
 export type PostSlugs = Pick<PostListing, 'slug' | 'publishedAt'>;
 export type BlogPostListingProps = Omit<PostListing, '_id'>;
 
-export type ArchivePageProps = {
+export interface ArchivePageProps {
   searchParams: Promise<{
     page?: string;
   }>;
-};
+}
 
-export type CategoryPageProps = {
+export interface CategoryPageProps {
   params: Promise<{
     category?: string[];
   }>;
   searchParams?: Promise<{
     page?: string;
   }>;
-};
+}
 
-export type TagPageProps = {
+export interface TagPageProps {
   params: Promise<{
     tag?: string[];
   }>;
   searchParams?: Promise<{
     page?: string;
   }>;
-};
+}
 
-export type PaginationProps = {
+export interface PaginationProps {
   currentPage: number;
   totalPages: number;
   basePath: string;
-};
+}
 
-export type SinglePostPageProps = {
+export interface SinglePostPageProps {
   params: Promise<{
     post?: string[];
   }>;
-};
+}
 
-export type GeneratedPageProps = {
+export interface GeneratedPageProps {
   params: Promise<{
     page?: string[];
   }>;
-};
+}
 
-export type SinglePost = {
+export interface SinglePost {
   _id: string;
   title: string;
   slug: string;
@@ -107,54 +107,60 @@ export type SinglePost = {
     title: string;
     slug: string;
   }>;
-};
+}
 
-export type SinglePage = {
+export interface SinglePage {
   _id: string;
   title: string;
   slug: string;
   content: NonNullable<Page['content']>;
-};
+}
 
-export type NavPage = {
+export interface NavPage {
   title: string;
   slug: string;
-};
+}
 
-export type SocialShareProps = {
+export interface SocialShareProps {
   title: string;
   url: string;
   description?: string;
-};
+}
 
-export type SocialShareLink = {
+export interface SocialShareLink {
   name: string;
   icon: React.ElementType;
   url: string;
-};
+}
 
-export type ContactFormResult = {
+export interface ContactFormResult {
   data: Response | null;
   error: Error | null;
-};
+}
 
-export type RecaptchaVerify = {
+export interface RecaptchaVerify {
   success: boolean;
   score?: number;
   error?: string;
-};
+}
 
-export type RecaptchaResponse = {
+export interface RecaptchaResponse {
   success: boolean;
   score?: number;
   action?: string;
   challenge_ts?: string;
   hostname?: string;
   'error-codes'?: string[];
-};
+}
 
-export type Success<T> = { data: T; error: null };
-export type Failure<E> = { data: null; error: E };
+export interface Success<T> {
+  data: T;
+  error: null;
+}
+export interface Failure<E> {
+  data: null;
+  error: E;
+}
 export type Result<T, E = Error> = Success<T> | Failure<E>;
 
 export interface RecaptchaWindow extends Window {

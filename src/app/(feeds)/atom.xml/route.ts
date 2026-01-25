@@ -68,20 +68,22 @@ export async function GET() {
             extensions: [
               {
                 name: '_tags',
-                objects: post.tags
-                  .filter(
-                    (tag: {
-                      title: string | null;
-                      slug: string | null;
-                    }): tag is {
-                      title: string;
-                      slug: string;
-                    } => Boolean(tag.title && tag.slug)
-                  )
-                  .map((tag) => ({
-                    name: tag.title,
-                    term: tag.slug
-                  }))
+                objects: {
+                  tags: post.tags
+                    .filter(
+                      (tag: {
+                        title: string | null;
+                        slug: string | null;
+                      }): tag is {
+                        title: string;
+                        slug: string;
+                      } => Boolean(tag.title && tag.slug)
+                    )
+                    .map((tag) => ({
+                      name: tag.title,
+                      term: tag.slug
+                    }))
+                }
               }
             ]
           }
