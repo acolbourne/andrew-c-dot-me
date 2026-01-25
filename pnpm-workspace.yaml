@@ -2,5 +2,7 @@ onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@sentry/cli'
   - '@swc/core'
+  - core-js
   - esbuild
+  - protobufjs
   - sharp

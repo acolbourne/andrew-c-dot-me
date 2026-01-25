@@ -4,6 +4,16 @@ import { gsap } from 'gsap';
 import { Lightbulb, LightbulbOff } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useRef } from 'react';
+import { tv } from 'tailwind-variants';
+
+const modeSelectVariants = tv({
+  slots: {
+    base: 'mode-toggle',
+    icon: 'flex items-center justify-center'
+  }
+});
+
+const { base, icon } = modeSelectVariants();
 
 export const ModeSelect: React.FC = () => {
   const { theme, setTheme } = useTheme();
@@ -55,12 +65,12 @@ export const ModeSelect: React.FC = () => {
 
   return (
     <button
-      className="mode-toggle"
+      className={base()}
       id="theme-toggle"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       type="button"
     >
-      <span className="flex items-center justify-center" ref={iconRef}>
+      <span className={icon()} ref={iconRef}>
         {theme === 'light' ? <Lightbulb /> : <LightbulbOff />}
       </span>
     </button>

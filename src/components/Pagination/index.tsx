@@ -1,6 +1,19 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { tv } from 'tailwind-variants';
 import type { PaginationProps } from '@/types';
+
+const paginationVariants = tv({
+  slots: {
+    base: 'mt-20 flex items-center justify-center gap-1',
+    linkPrevious:
+      'px-3 py-2 font-medium text-slate-600 text-sm transition-colors hover:text-accent-light dark:text-slate-400 dark:hover:text-white',
+    linkNext:
+      'px-3 py-2 font-medium text-slate-600 text-sm transition-colors hover:text-accent-light dark:text-slate-400 dark:hover:text-white'
+  }
+});
+
+const { base, linkPrevious, linkNext } = paginationVariants();
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, basePath }) => {
   const t = useTranslations('pagination');
@@ -15,12 +28,9 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, basePa
   };
 
   return (
-    <div className="mt-20 flex items-center justify-center gap-1">
+    <div className={base()}>
       {currentPage > 1 ? (
-        <Link
-          className="px-3 py-2 font-medium text-slate-600 text-sm transition-colors hover:text-accent-light dark:text-slate-400 dark:hover:text-white"
-          href={getPageUrl(currentPage - 1)}
-        >
+        <Link className={linkPrevious()} href={getPageUrl(currentPage - 1)}>
           &larr; {t('previous')}
         </Link>
       ) : null}
@@ -40,10 +50,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, basePa
       ))}
 
       {currentPage < totalPages ? (
-        <Link
-          className="px-3 py-2 font-medium text-slate-600 text-sm transition-colors hover:text-accent-light dark:text-slate-400 dark:hover:text-white"
-          href={getPageUrl(currentPage + 1)}
-        >
+        <Link className={linkNext()} href={getPageUrl(currentPage + 1)}>
           {t('next')} &rarr;
         </Link>
       ) : null}
