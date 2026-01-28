@@ -3,7 +3,7 @@
 import { gsap } from 'gsap';
 import { Lightbulb, LightbulbOff } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { tv } from 'tailwind-variants';
 
 const modeSelectVariants = tv({
@@ -18,6 +18,11 @@ const { base, icon } = modeSelectVariants();
 export const ModeSelect: React.FC = () => {
   const { theme, setTheme } = useTheme();
   const iconRef = useRef<HTMLSpanElement | null>(null);
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!iconRef.current) {
@@ -71,7 +76,7 @@ export const ModeSelect: React.FC = () => {
       type="button"
     >
       <span className={icon()} ref={iconRef}>
-        {theme === 'light' ? <Lightbulb /> : <LightbulbOff />}
+        {!mounted || theme === 'light' ? <Lightbulb /> : <LightbulbOff />}
       </span>
     </button>
   );
