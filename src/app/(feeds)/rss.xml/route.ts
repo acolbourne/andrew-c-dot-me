@@ -2,6 +2,7 @@ import { Feed } from 'feed';
 import { getTranslations } from 'next-intl/server';
 import { tv } from 'tailwind-variants';
 import { domain, websiteSettings } from '@/constants';
+import { iconPaths } from '@/constants/icons';
 import { POSTS_QUERY } from '@/sanity/groq/queries';
 import { client } from '@/sanity/lib/client';
 import { urlFor } from '@/sanity/lib/image';
@@ -214,6 +215,13 @@ export async function GET(request: Request) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${t('pageTitle', { name: websiteSettings.name })}</title>
+  <link rel="icon" href="${iconPaths.favicon16Light}" sizes="16x16" data-theme-aware="true">
+  <link rel="icon" href="${iconPaths.favicon32Light}" sizes="32x32" data-theme-aware="true">
+  <link rel="icon" href="${iconPaths.androidIcon192Light}" sizes="192x192" data-theme-aware="true">
+  <link rel="icon" href="${iconPaths.androidIcon512Light}" sizes="512x512" data-theme-aware="true">
+  <link rel="icon" href="${iconPaths.faviconLight}" data-theme-aware="true">
+  <link rel="shortcut icon" href="${iconPaths.faviconLight}" data-theme-aware="true">
+  <link rel="apple-touch-icon" href="${iconPaths.appleTouchIconLight}" data-theme-aware="true">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -239,6 +247,20 @@ export async function GET(request: Request) {
       const THEME_STORAGE_KEY = 'theme';
       const toggleDarkLabel = ${JSON.stringify(t('toggleDarkMode'))};
       const toggleLightLabel = ${JSON.stringify(t('toggleLightMode'))};
+      const iconPaths = {
+        favicon16Light: ${JSON.stringify(iconPaths.favicon16Light)},
+        favicon16Dark: ${JSON.stringify(iconPaths.favicon16Dark)},
+        favicon32Light: ${JSON.stringify(iconPaths.favicon32Light)},
+        favicon32Dark: ${JSON.stringify(iconPaths.favicon32Dark)},
+        androidIcon192Light: ${JSON.stringify(iconPaths.androidIcon192Light)},
+        androidIcon192Dark: ${JSON.stringify(iconPaths.androidIcon192Dark)},
+        androidIcon512Light: ${JSON.stringify(iconPaths.androidIcon512Light)},
+        androidIcon512Dark: ${JSON.stringify(iconPaths.androidIcon512Dark)},
+        faviconLight: ${JSON.stringify(iconPaths.faviconLight)},
+        faviconDark: ${JSON.stringify(iconPaths.faviconDark)},
+        appleTouchIconLight: ${JSON.stringify(iconPaths.appleTouchIconLight)},
+        appleTouchIconDark: ${JSON.stringify(iconPaths.appleTouchIconDark)}
+      };
       
       function getSystemTheme() {
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -250,6 +272,53 @@ export async function GET(request: Request) {
         } catch {
           return null;
         }
+      }
+      
+      function removeExistingFavicons() {
+        const head = document.head;
+        const existingLinks = head.querySelectorAll('link[data-theme-aware="true"]');
+        for (const link of existingLinks) {
+          link.remove();
+        }
+      }
+      
+      function createFaviconLink(rel, href, sizes) {
+        const link = document.createElement('link');
+        link.setAttribute('rel', rel);
+        link.setAttribute('href', href);
+        link.setAttribute('data-theme-aware', 'true');
+        if (sizes) {
+          link.setAttribute('sizes', sizes);
+        }
+        document.head.appendChild(link);
+      }
+      
+      function updateFavicons(isDark) {
+        removeExistingFavicons();
+        
+        const icons = isDark ? {
+          favicon16: iconPaths.favicon16Dark,
+          favicon32: iconPaths.favicon32Dark,
+          android192: iconPaths.androidIcon192Dark,
+          android512: iconPaths.androidIcon512Dark,
+          favicon: iconPaths.faviconDark,
+          apple: iconPaths.appleTouchIconDark
+        } : {
+          favicon16: iconPaths.favicon16Light,
+          favicon32: iconPaths.favicon32Light,
+          android192: iconPaths.androidIcon192Light,
+          android512: iconPaths.androidIcon512Light,
+          favicon: iconPaths.faviconLight,
+          apple: iconPaths.appleTouchIconLight
+        };
+        
+        createFaviconLink('icon', icons.favicon16, '16x16');
+        createFaviconLink('icon', icons.favicon32, '32x32');
+        createFaviconLink('icon', icons.android192, '192x192');
+        createFaviconLink('icon', icons.android512, '512x512');
+        createFaviconLink('icon', icons.favicon);
+        createFaviconLink('shortcut icon', icons.favicon);
+        createFaviconLink('apple-touch-icon', icons.apple);
       }
       
       function setTheme(theme) {
@@ -272,6 +341,8 @@ export async function GET(request: Request) {
         if (themeToggle) {
           themeToggle.setAttribute('aria-label', isDark ? toggleLightLabel : toggleDarkLabel);
         }
+        
+        updateFavicons(isDark);
         
         try {
           if (theme === getSystemTheme()) {
