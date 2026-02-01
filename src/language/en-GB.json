@@ -30,7 +30,14 @@
   },
   "rss": {
     "title": "RSS Feed",
-    "description": "The RSS feed for my posts."
+    "description": "The RSS feed for my posts.",
+    "feedPrefix": "RSS Feed:",
+    "feedUrl": "Feed URL:",
+    "recentPosts": "Recent Posts",
+    "backToWebsite": "Back to the Website",
+    "pageTitle": "RSS Feed - {name}",
+    "toggleDarkMode": "Toggle dark mode",
+    "toggleLightMode": "Toggle light mode"
   },
   "error404": {
     "errorCode": "404",
