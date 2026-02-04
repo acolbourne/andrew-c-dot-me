@@ -67,8 +67,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
-      "ultracite fix",
-      "pnpm dlx ultracite fix"
+      "ultracite fix"
     ]
   },
   "browserslist": "> 1%"
