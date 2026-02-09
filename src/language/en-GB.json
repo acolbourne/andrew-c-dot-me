@@ -100,5 +100,9 @@
   },
   "footer": {
     "copyright": "© {year} {websiteName}"
+  },
+  "cookieApproval": {
+    "description": "To improve your experience and track visitor data, my website uses anonymous cookies. Don't worry, I don't store any personal information.",
+    "accept": "Okay, got it."
   }
 }

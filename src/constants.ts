@@ -5,6 +5,7 @@ import { env } from './env';
 export const domain: string =
   env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://andrew-c.me';
 export const defaultLocale: string = 'en-GB';
+export const defaultTimezone: string = 'Europe/London';
 
 export const websiteSettings: WebsiteConfig = {
   name: 'Andrew Colbourne',

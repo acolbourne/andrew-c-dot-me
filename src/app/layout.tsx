@@ -7,6 +7,7 @@ import { interFont } from './typography';
 import '@/cssfiles/globals.css';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ViewTransition } from 'react';
+import CookieApproval from '@/components/CookieApproval';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 
@@ -41,6 +42,7 @@ export default async function RootLayout({
             </ViewTransition>
             <Footer />
           </div>
+          <CookieApproval />
         </Providers>
       </body>
     </html>
