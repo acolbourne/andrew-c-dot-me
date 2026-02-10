@@ -65,7 +65,9 @@ const BlogPostListing: React.FC<BlogPostListingProps> = ({
         <Image
           alt={title ?? ''}
           className={featuredImage()}
+          fetchPriority="high"
           height={560}
+          loading="lazy"
           src={imageUrl}
           width={800}
         />

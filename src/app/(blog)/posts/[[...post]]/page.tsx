@@ -133,7 +133,15 @@ const PostImage = ({
 
   return (
     <div className={postImageContainer()}>
-      <Image alt={title || ''} className={postImage()} height={600} src={imageUrl} width={1200} />
+      <Image
+        alt={title || ''}
+        className={postImage()}
+        fetchPriority="high"
+        height={600}
+        loading="lazy"
+        src={imageUrl}
+        width={1200}
+      />
     </div>
   );
 };

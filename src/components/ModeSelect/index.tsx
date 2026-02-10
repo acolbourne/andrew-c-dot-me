@@ -2,6 +2,7 @@
 
 import { gsap } from 'gsap';
 import { Lightbulb, LightbulbOff } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
 import { tv } from 'tailwind-variants';
@@ -16,6 +17,7 @@ const modeSelectVariants = tv({
 const { base, icon } = modeSelectVariants();
 
 export const ModeSelect: React.FC = () => {
+  const t = useTranslations('modeSelect');
   const { theme, setTheme } = useTheme();
   const iconRef = useRef<HTMLSpanElement | null>(null);
   const [mounted, setMounted] = useState<boolean>(false);
@@ -70,6 +72,9 @@ export const ModeSelect: React.FC = () => {
 
   return (
     <button
+      aria-describedby="theme-toggle-description"
+      aria-description={t('ariaDescription')}
+      aria-label={t('ariaLabel')}
       className={base()}
       id="theme-toggle"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
