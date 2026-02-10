@@ -3,6 +3,7 @@
 import { gsap } from 'gsap';
 import { MenuIcon, XIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { tv } from 'tailwind-variants';
 import type { NavItems } from '@/types';
@@ -25,6 +26,7 @@ const navigationVariants = tv({
 const { base, browserNavLink, mobileNavLink } = navigationVariants();
 
 const Navigation: React.FC<NavigationProps> = ({ items }) => {
+  const t = useTranslations('navigation');
   const [mobileMenu, setMobileMenu] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -183,6 +185,7 @@ const Navigation: React.FC<NavigationProps> = ({ items }) => {
         </nav>
 
         <button
+          aria-label={t('ariaLabel')}
           id="mobile-nav-toggle"
           onClick={handleToggle}
           onMouseEnter={handleMouseEnter}
